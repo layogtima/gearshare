@@ -1,0 +1,143 @@
+/* Hide Vue until mounted */
+[v-cloak] { 
+    display: none; 
+  }
+  
+  /* Solarpunk gradients */
+  .solarpunk-gradient {
+    background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+  }
+  
+  .community-gradient {
+    background: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
+  }
+  
+  /* Custom modal animations */
+  .modal-enter-active, .modal-leave-active {
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  
+  .modal-enter-from, .modal-leave-to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  
+  /* Custom toast animations */
+  .toast-enter-active, .toast-leave-active {
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  
+  .toast-enter-from, .toast-leave-to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  /* Custom card hover effects */
+  .tool-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .tool-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Accessibility focus styles */
+  button:focus, input:focus, select:focus, textarea:focus {
+    outline: 2px solid #10B981;
+    outline-offset: 2px;
+  }
+  
+  /* Custom scrollbar for message areas */
+  .message-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .message-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  .message-scroll::-webkit-scrollbar-thumb {
+    background: #10B981;
+    border-radius: 10px;
+  }
+  
+  .message-scroll::-webkit-scrollbar-thumb:hover {
+    background: #0D9488;
+  }
+  
+  /* Responsive adjustments for small screens */
+  @media (max-width: 640px) {
+    .tool-card {
+      flex-direction: column;
+    }
+    
+    .tool-card-image {
+      width: 100%;
+      height: 200px;
+    }
+    
+    .tool-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .tool-actions button {
+      margin-top: 0.5rem;
+    }
+  }
+  
+  /* Dark mode support (optional, activated by system preferences) */
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #1F2937;
+      color: #F9FAFB;
+    }
+    
+    .card-bg {
+      background-color: #374151;
+    }
+    
+    .text-dark {
+      color: #F9FAFB;
+    }
+    
+    .border-light {
+      border-color: #4B5563;
+    }
+  }
+  
+  /* Print styles for resource sharing agreements */
+  @media print {
+    .no-print {
+      display: none;
+    }
+    
+    .print-only {
+      display: block;
+    }
+    
+    body {
+      font-size: 12pt;
+      line-height: 1.5;
+      color: #000;
+      background: #fff;
+    }
+    
+    .agreement-container {
+      padding: 2cm;
+      border: 1px solid #ddd;
+    }
+    
+    .agreement-header {
+      text-align: center;
+      margin-bottom: 2cm;
+    }
+    
+    .agreement-signatures {
+      margin-top: 3cm;
+      display: flex;
+      justify-content: space-between;
+    }
+  }

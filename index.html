@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShareSphere - Community Resource Exchange</title>
+    <!-- Core Vue and Tailwind -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.js"></script>
+    <!-- Using the CDN for development only! For production, use proper build process -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Icon Library -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Our custom styles -->
+    <link href="./styles.css" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <div id="app" v-cloak>
+      <!-- Navigation Bar -->
+      <nav class="solarpunk-gradient shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex justify-between h-16">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 flex items-center">
+                <span class="text-green-800 text-xl font-bold"
+                  >💚 SHARE SPHERE</span
+                >
+              </div>
+            </div>
+            <div class="flex items-center space-x-4">
+              <button
+                @click="detectLocation"
+                class="text-green-800 hover:text-green-900 transition duration-300"
+              >
+                <i class="fas fa-location-arrow"></i>
+              </button>
+              <button
+                @click="toggleNewItemModal"
+                class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300 flex items-center"
+              >
+                <i class="fas fa-plus mr-2"></i> Add Item
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Location Bar -->
+        <div
+          class="bg-white rounded-lg shadow-md p-4 mb-6 flex items-center justify-between"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>
+            <span>{{ currentLocation }}</span>
+          </div>
+          <div>
+            <select
+              v-model="searchRadius"
+              class="rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50"
+            >
+              <option value="1">1 km radius</option>
+              <option value="2">2 km radius</option>
+              <option value="5">5 km radius</option>
+              <option value="10">10 km radius</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="mb-6 bg-white rounded-lg shadow-md overflow-hidden">
+          <div class="flex">
+            <button
+              @click="activeTab = 'available'"
+              :class="[
+              'flex-1 py-3 px-4 text-center font-medium focus:outline-none transition-colors duration-200',
+              activeTab === 'available' ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-green-100'
+            ]"
+            >
+              <i class="fas fa-search mr-2"></i> Find Tools
+            </button>
+            <button
+              @click="activeTab = 'myItems'"
+              :class="[
+              'flex-1 py-3 px-4 text-center font-medium focus:outline-none transition-colors duration-200',
+              activeTab === 'myItems' ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-green-100'
+            ]"
+            >
+              <i class="fas fa-toolbox mr-2"></i> My Tools
+            </button>
+            <button
+              @click="activeTab = 'messages'"
+              :class="[
+              'flex-1 py-3 px-4 text-center font-medium focus:outline-none transition-colors duration-200',
+              activeTab === 'messages' ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-green-100'
+            ]"
+            >
+              <i class="fas fa-comments mr-2"></i> Messages
+              <span
+                v-if="unreadMessages > 0"
+                class="ml-1 px-2 py-1 text-xs bg-red-500 text-white rounded-full"
+                >{{ unreadMessages }}</span
+              >
+            </button>
+          </div>
+        </div>
+
+        <!-- Search Bar (only in Find Tools tab) -->
+        <div v-if="activeTab === 'available'" class="mb-6">
+          <div class="relative">
+            <input
+              type="text"
+              v-model="searchQuery"
+              placeholder="Search for tools..."
+              class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <i class="fas fa-search text-gray-400"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content -->
+        <!-- Available Tools Tab -->
+        <div v-if="activeTab === 'available'" class="space-y-6">
+          <div
+            v-if="filteredAvailableItems.length === 0"
+            class="bg-white rounded-lg shadow-md p-8 text-center"
+          >
+            <i class="fas fa-tools text-gray-400 text-4xl mb-4"></i>
+            <p class="text-gray-600">
+              No tools found in your area. Try expanding your search radius or
+              check back later!
+            </p>
+          </div>
+
+          <tool-card
+            v-for="item in filteredAvailableItems"
+            :key="item.id"
+            :item="item"
+            @borrow-request="openBorrowModal"
+          ></tool-card>
+        </div>
+
+        <!-- My Tools Tab -->
+        <div v-else-if="activeTab === 'myItems'" class="space-y-6">
+          <div
+            v-if="myItems.length === 0"
+            class="bg-white rounded-lg shadow-md p-8 text-center"
+          >
+            <i class="fas fa-box-open text-gray-400 text-4xl mb-4"></i>
+            <p class="text-gray-600 mb-4">You haven't added any tools yet</p>
+            <button
+              @click="toggleNewItemModal"
+              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md shadow-sm transition duration-300"
+            >
+              Add Your First Tool
+            </button>
+          </div>
+
+          <my-tool-card
+            v-for="item in myItems"
+            :key="item.id"
+            :item="item"
+            @edit="editItem"
+            @toggle-privacy="toggleItemPrivacy"
+            @delete="confirmDeleteItem"
+          ></my-tool-card>
+        </div>
+
+        <!-- Messages Tab -->
+        <div
+          v-else-if="activeTab === 'messages'"
+          class="bg-white rounded-lg shadow-md overflow-hidden"
+        >
+          <div v-if="messages.length === 0" class="p-8 text-center">
+            <i class="fas fa-comment-slash text-gray-400 text-4xl mb-4"></i>
+            <p class="text-gray-600">
+              No messages yet. When someone requests to borrow your tools,
+              you'll see their messages here.
+            </p>
+          </div>
+          <div v-else>
+            <div class="divide-y divide-gray-200">
+              <message-preview
+                v-for="message in messages"
+                :key="message.id"
+                :message="message"
+                @open="openMessageDetail"
+              ></message-preview>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Modals -->
+      <add-item-modal
+        v-if="showNewItemModal"
+        :new-item="newItem"
+        @close="toggleNewItemModal"
+        @add="addNewItem"
+      ></add-item-modal>
+
+      <borrow-request-modal
+        v-if="showBorrowModal"
+        :selected-item="selectedItem"
+        :borrow-request="borrowRequest"
+        @close="showBorrowModal = false"
+        @send="sendBorrowRequest"
+      ></borrow-request-modal>
+
+      <message-detail-modal
+        v-if="showMessageDetail"
+        :selected-message="selectedMessage"
+        :message-reply="messageReply"
+        @close="showMessageDetail = false"
+        @reply="sendReply"
+        @approve="approveRequest"
+        @reject="rejectRequest"
+        @update:message-reply="messageReply = $event"
+      ></message-detail-modal>
+
+      <!-- Toast Notification -->
+      <div
+        v-if="showToast"
+        class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center z-50"
+      >
+        <i class="fas fa-check-circle mr-2"></i>
+        <span>{{ toastMessage }}</span>
+      </div>
+    </div>
+
+    <!-- Import components as type="module" -->
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
