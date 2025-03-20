@@ -6,8 +6,31 @@
     <title>Gearshare - Hyperlocal Gear Exchange</title>
     <!-- Core Vue -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.js"></script>
-    <!-- Tailwind CSS - For development only! -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - More readable alternatives -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Icon Library -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+
     <!-- Tailwind Config -->
     <script>
       tailwind.config = {
@@ -21,35 +44,233 @@
             },
             fontFamily: {
               steampunk: ["Pirata One", "cursive"],
-              ornate: ["Quicksand", "sans-serif"],
-              mechanical: ["Quicksand", "sans-serif"],
+              ornate: ["Jura", "sans-serif"],
+              mechanical: ["JetBrains Mono", "monospace"],
               body: ["Quicksand", "sans-serif"],
+            },
+            boxShadow: {
+              brass:
+                "0 4px 6px -1px rgba(212, 180, 147, 0.5), 0 2px 4px -1px rgba(212, 180, 147, 0.06)",
+              steampunk:
+                "0 4px 6px -1px rgba(12, 9, 80, 0.3), 0 2px 4px -1px rgba(12, 9, 80, 0.06)",
+            },
+            animation: {
+              "spin-slow": "spin 20s linear infinite",
+              "spin-reverse": "spin-reverse 15s linear infinite",
+            },
+            keyframes: {
+              spin: {
+                from: { transform: "rotate(0deg)" },
+                to: { transform: "rotate(360deg)" },
+              },
+              "spin-reverse": {
+                from: { transform: "rotate(0deg)" },
+                to: { transform: "rotate(-360deg)" },
+              },
+            },
+            backgroundImage: {
+              "cog-pattern":
+                'url(\'data:image/svg+xml,%3Csvg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M12 8c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4zm0-2c.3 0 .5.2.5.5v1c.6.2 1.2.5 1.7.9l.7-.7c.2-.2.5-.2.7 0l.5.5c.2.2.2.5 0 .7l-.7.7c.4.5.6 1.1.7 1.7h1c.3 0 .5.2.5.5v.6c0 .3-.2.5-.5.5h-1c-.2.6-.5 1.2-.9 1.7l.7.7c.2.2.2.5 0 .7l-.5.5c-.2.2-.5.2-.7 0l-.7-.7c-.5.4-1.1.6-1.7.7v1c0 .3-.2.5-.5.5h-.6c-.3 0-.5-.2-.5-.5v-1c-.6-.2-1.2-.5-1.7-.9l-.7.7c-.2.2-.5.2-.7 0l-.5-.5c-.2-.2-.2-.5 0-.7l.7-.7c-.4-.5-.6-1.1-.7-1.7h-1c-.3 0-.5-.2-.5-.5v-.6c0-.3.2-.5.5-.5h1c.2-.6.5-1.2.9-1.7l-.7-.7c-.2-.2-.2-.5 0-.7l.5-.5c.2-.2.5-.2.7 0l.7.7c.5-.4 1.1-.6 1.7-.7v-1c0-.3.2-.5.5-.5h.6z" fill="%23261FB3" fill-opacity="0.05"%2F%3E%3C%2Fsvg%3E\')',
+              "cog-decoration":
+                'url(\'data:image/svg+xml,%3Csvg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M12 8c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4zm0-2c.3 0 .5.2.5.5v1c.6.2 1.2.5 1.7.9l.7-.7c.2-.2.5-.2.7 0l.5.5c.2.2.2.5 0 .7l-.7.7c.4.5.6 1.1.7 1.7h1c.3 0 .5.2.5.5v.6c0 .3-.2.5-.5.5h-1c-.2.6-.5 1.2-.9 1.7l.7.7c.2.2.2.5 0 .7l-.5.5c-.2.2-.5.2-.7 0l-.7-.7c-.5.4-1.1.6-1.7.7v1c0 .3-.2.5-.5.5h-.6c-.3 0-.5-.2-.5-.5v-1c-.6-.2-1.2-.5-1.7-.9l-.7.7c-.2.2-.5.2-.7 0l-.5-.5c-.2-.2-.2-.5 0-.7l.7-.7c-.4-.5-.6-1.1-.7-1.7h-1c-.3 0-.5-.2-.5-.5v-.6c0-.3.2-.5.5-.5h1c.2-.6.5-1.2.9-1.7l-.7-.7c-.2-.2-.2-.5 0-.7l.5-.5c.2-.2.5-.2.7 0l.7.7c.5-.4 1.1-.6 1.7-.7v-1c0-.3.2-.5.5-.5h.6z" fill="%23261FB3" fill-opacity="0.6"%2F%3E%3C%2Fsvg%3E\')',
             },
           },
         },
       };
     </script>
-    <!-- Icon Library -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-      rel="stylesheet"
-    />
-    <!-- Our custom styles -->
-    <link href="./styles.css" rel="stylesheet" />
+
+    <!-- Custom styles that can't be easily converted to Tailwind -->
+    <style>
+      /* Hide Vue until mounted */
+      [v-cloak] {
+        display: none;
+      }
+
+      /* Animation keyframes for modals and toasts */
+      @keyframes modalEnter {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes toastEnter {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .modal-enter {
+        animation: modalEnter 0.3s ease-out;
+      }
+      .toast-enter {
+        animation: toastEnter 0.3s ease-out;
+      }
+
+      /* Gear pattern SVG background */
+      .gear-pattern {
+        background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 7.5c-.83 0-1.5.67-1.5 1.5v3.68C24.48 13.27 21.27 16.48 20.68 20H17c-.83 0-1.5.67-1.5 1.5S16.17 23 17 23h3.68c.59 3.52 3.8 6.73 7.32 7.32V34c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-3.68c3.52-.59 6.73-3.8 7.32-7.32H42c.83 0 1.5-.67 1.5-1.5S42.83 20 42 20h-3.68c-.59-3.52-3.8-6.73-7.32-7.32V9c0-.83-.67-1.5-1.5-1.5zm0 7.5c2.48 0 4.5 2.02 4.5 4.5s-2.02 4.5-4.5 4.5-4.5-2.02-4.5-4.5 2.02-4.5 4.5-4.5z" fill="%23261FB3" fill-opacity="0.1"%2F%3E%3C%2Fsvg%3E');
+      }
+
+      /* Custom scrollbar for desktop */
+      @media (min-width: 768px) {
+        ::-webkit-scrollbar {
+          width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: #fbe4d6;
+          border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: #261fb3;
+          border-radius: 6px;
+          border: 3px solid #fbe4d6;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: #161179;
+        }
+      }
+    </style>
   </head>
-  <body class="bg-cream min-h-screen">
-    <div id="app" v-cloak class="app-container py-4">
-      <!-- Navigation Bar -->
-      <nav
-        class="steampunk-gradient rounded-2xl shadow-brass mb-6 relative overflow-hidden"
+  <body
+    class="bg-cream font-body text-abyss bg-cog-pattern bg-fixed min-h-screen"
+  >
+    <div id="app" v-cloak class="min-h-screen flex flex-col lg:flex-row">
+      <!-- Desktop Sidebar (Fixed on large screens) -->
+      <aside
+        class="lg:w-72 lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:flex-col p-6 bg-cream bg-opacity-95 border-r border-royal border-opacity-20 z-10"
       >
-        <div class="cog-decoration cog-top-right"></div>
-        <div class="cog-decoration cog-bottom-left"></div>
-        <div class="px-8 py-9">
+        <div
+          class="rounded-2xl bg-gradient-to-br from-royal to-abyss text-cream p-6 mb-4 relative overflow-hidden"
+        >
+          <div
+            class="absolute top-0 right-0 w-20 h-20 bg-cog-decoration bg-no-repeat animate-spin-slow"
+          ></div>
+          <h1 class="font-steampunk text-4xl mb-2">Gearshare</h1>
+          <p class="font-body text-sm italic">
+            Because capitalism wants you to buy your own damn drill, we want you
+            to share it.
+          </p>
+        </div>
+
+        <div class="flex items-center space-x-2 mb-6">
+          <div class="flex-1">
+            <span class="text-abyss font-mechanical"
+              >{{ currentLocation }}</span
+            >
+          </div>
+          <button
+            @click="detectLocation"
+            class="text-royal hover:text-midnight transition duration-300 p-2 bg-cream border border-royal rounded-full"
+          >
+            <i class="fas fa-location-arrow"></i>
+          </button>
+        </div>
+
+        <div class="mb-6">
+          <select
+            v-model="searchRadius"
+            class="w-full px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss font-mechanical focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300 appearance-none bg-no-repeat bg-right pr-8"
+            style="
+              background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 20 20\' fill=\'%23261FB3\'%3E%3Cpath fill-rule=\'evenodd\' d=\'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z\' clip-rule=\'evenodd\' /%3E%3C/svg%3E');
+              background-size: 1.5em 1.5em;
+            "
+          >
+            <option value="1">1 km radius</option>
+            <option value="2">2 km radius</option>
+            <option value="5">5 km radius</option>
+            <option value="10">10 km radius</option>
+            <option value="20">20 km radius</option>
+          </select>
+        </div>
+
+        <nav class="mb-6">
+          <button
+            @click="activeTab = 'available'"
+            :class="[
+              'w-full py-3 px-4 text-left font-medium mb-2 rounded-xl transition-colors duration-200 flex items-center',
+              activeTab === 'available' ? 'bg-royal text-cream' : 'bg-cream text-royal hover:bg-royal hover:bg-opacity-10'
+            ]"
+          >
+            <i class="fas fa-search mr-3 w-6 text-center"></i> Find Gear
+          </button>
+          <button
+            @click="activeTab = 'myItems'"
+            :class="[
+              'w-full py-3 px-4 text-left font-medium mb-2 rounded-xl transition-colors duration-200 flex items-center',
+              activeTab === 'myItems' ? 'bg-royal text-cream' : 'bg-cream text-royal hover:bg-royal hover:bg-opacity-10'
+            ]"
+          >
+            <i class="fas fa-cogs mr-3 w-6 text-center"></i> My Gear
+          </button>
+          <button
+            @click="activeTab = 'messages'"
+            :class="[
+              'w-full py-3 px-4 text-left font-medium mb-2 rounded-xl transition-colors duration-200 flex items-center',
+              activeTab === 'messages' ? 'bg-royal text-cream' : 'bg-cream text-royal hover:bg-royal hover:bg-opacity-10'
+            ]"
+          >
+            <i class="fas fa-envelope mr-3 w-6 text-center"></i>
+            Messages
+            <span
+              v-if="unreadMessages > 0"
+              class="ml-auto px-2 py-1 text-xs bg-royal text-cream rounded-full"
+              >{{ unreadMessages }}</span
+            >
+          </button>
+        </nav>
+
+        <div class="mt-auto">
+          <button
+            @click="toggleNewItemModal"
+            class="w-full py-3 px-4 bg-royal text-cream rounded-xl border-2 border-cream font-mechanical uppercase tracking-wider shadow-steampunk transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0 flex items-center justify-center"
+          >
+            <i class="fas fa-plus mr-2"></i> Add New Gear
+          </button>
+
+          <div class="mt-6 text-xs text-center text-abyss opacity-70">
+            <p>
+              Press
+              <kbd class="px-2 py-1 bg-royal bg-opacity-10 rounded">Tab</kbd> to
+              navigate
+            </p>
+            <p class="mt-2">
+              <kbd class="px-2 py-1 bg-royal bg-opacity-10 rounded">Alt+N</kbd>
+              to add new gear
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Mobile Navigation -->
+      <header
+        class="lg:hidden rounded-2xl bg-gradient-to-br from-royal to-abyss shadow-steampunk mb-4 relative overflow-hidden"
+      >
+        <div
+          class="absolute top-0 right-0 w-10 h-10 bg-cog-decoration bg-no-repeat opacity-60 animate-spin-slow"
+        ></div>
+        <div
+          class="absolute bottom-0 left-0 w-10 h-10 bg-cog-decoration bg-no-repeat opacity-60 animate-spin-reverse"
+        ></div>
+        <div class="px-6 py-6">
           <div class="flex justify-between items-center">
             <div class="flex items-center">
-              <div class="flex-shrink-0 flex items-center">
-                <span class="text-5xl font-steampunk">Gearshare</span>
+              <div class="flex-shrink-0">
+                <span class="text-4xl font-steampunk text-cream"
+                  >Gearshare</span
+                >
               </div>
             </div>
             <div class="flex items-center space-x-4">
@@ -61,19 +282,21 @@
               </button>
               <button
                 @click="toggleNewItemModal"
-                class="steampunk-button flex items-center bold"
+                class="px-4 py-2 bg-royal text-cream rounded-full border-2 border-cream font-mechanical uppercase tracking-wider text-sm shadow-steampunk transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0 flex items-center"
               >
                 <i class="fas fa-plus mr-2"></i> Add Gear
               </button>
             </div>
           </div>
         </div>
-      </nav>
+      </header>
 
-      <!-- Main Content -->
-      <main class="space-y-6">
-        <!-- Location Bar -->
-        <div class="steampunk-card p-4 flex items-center justify-between">
+      <!-- Main Content - With proper spacing for sidebar -->
+      <main class="flex-1 p-4 lg:p-8 lg:pl-80">
+        <!-- Location Bar (Mobile Only) -->
+        <div
+          class="lg:hidden rounded-xl border-2 border-royal p-4 flex items-center justify-between bg-cream mb-4"
+        >
           <div class="flex items-center">
             <i class="fas fa-map-marker-alt text-royal mr-2"></i>
             <span class="font-mechanical">{{ currentLocation }}</span>
@@ -81,7 +304,11 @@
           <div>
             <select
               v-model="searchRadius"
-              class="steampunk-input steampunk-select"
+              class="px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss font-mechanical focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300 appearance-none bg-no-repeat bg-right pr-8"
+              style="
+                background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 20 20\' fill=\'%23261FB3\'%3E%3Cpath fill-rule=\'evenodd\' d=\'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z\' clip-rule=\'evenodd\' /%3E%3C/svg%3E');
+                background-size: 1.5em 1.5em;
+              "
             >
               <option value="1">1 km radius</option>
               <option value="2">2 km radius</option>
@@ -91,126 +318,164 @@
           </div>
         </div>
 
-        <!-- Tab Navigation -->
-        <div class="steampunk-tabs flex">
+        <!-- Tab Navigation (Mobile Only) -->
+        <div
+          class="flex lg:hidden rounded-xl border-2 border-royal overflow-hidden mb-4"
+        >
           <button
             @click="activeTab = 'available'"
             :class="[
-            'flex-1 py-3 px-4 text-center font-medium focus:outline-none transition-colors duration-200 steampunk-tab',
-            activeTab === 'available' ? 'active' : ''
-          ]"
+            'flex-1 py-3 px-4 text-center font-medium transition-colors duration-200',
+            activeTab === 'available' ? 'bg-royal text-cream' : 'bg-cream text-royal'
+            ]"
           >
             <i class="fas fa-search mr-2"></i> Find Gear
           </button>
           <button
             @click="activeTab = 'myItems'"
             :class="[
-            'flex-1 py-3 px-4 text-center font-medium focus:outline-none transition-colors duration-200 steampunk-tab',
-            activeTab === 'myItems' ? 'active' : ''
-          ]"
+            'flex-1 py-3 px-4 text-center font-medium transition-colors duration-200',
+            activeTab === 'myItems' ? 'bg-royal text-cream' : 'bg-cream text-royal'
+            ]"
           >
             <i class="fas fa-cogs mr-2"></i> My Gear
           </button>
           <button
             @click="activeTab = 'messages'"
             :class="[
-            'flex-1 py-3 px-4 text-center font-medium focus:outline-none transition-colors duration-200 steampunk-tab',
-            activeTab === 'messages' ? 'active' : ''
-          ]"
+            'flex-1 py-3 px-4 text-center font-medium transition-colors duration-200',
+            activeTab === 'messages' ? 'bg-royal text-cream' : 'bg-cream text-royal'
+            ]"
           >
-            <i class="fas fa-envelope mr-2"></i> Messages
-            <span
-              v-if="unreadMessages > 0"
-              class="ml-1 px-2 py-1 text-xs bg-royal text-cream rounded-full"
-              >{{ unreadMessages }}</span
-            >
+            <i class="fas fa-envelope mr-2"></i>
+            <span class="relative">
+              Messages
+              <span
+                v-if="unreadMessages > 0"
+                class="absolute -top-2 -right-6 px-2 py-0 text-xs bg-royal text-cream rounded-full"
+                >{{ unreadMessages }}</span
+              >
+            </span>
           </button>
         </div>
 
-        <!-- Search Bar (only in Find Tools tab) -->
-        <div v-if="activeTab === 'available'" class="mb-6">
-          <div class="relative">
-            <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Search for gears and contraptions..."
-              class="w-full pl-10 pr-4 py-3 steampunk-input"
-            />
-            <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-            >
-              <i class="fas fa-search text-royal"></i>
+        <!-- Tab Content Area -->
+        <div class="mx-auto max-w-6xl">
+          <!-- Search Bar (only in Find Gear tab) -->
+          <div v-if="activeTab === 'available'" class="mb-6">
+            <div class="relative">
+              <input
+                type="text"
+                v-model="searchQuery"
+                placeholder="Search for gears and contraptions..."
+                class="w-full pl-10 pr-4 py-3 bg-cream border-2 border-royal rounded-xl text-abyss focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300"
+              />
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <i class="fas fa-search text-royal"></i>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Tab Content -->
-        <!-- Available Tools Tab -->
-        <div v-if="activeTab === 'available'" class="space-y-6">
-          <div
-            v-if="filteredAvailableItems.length === 0"
-            class="steampunk-card p-8 text-center"
-          >
-            <i class="fas fa-cogs text-royal text-4xl mb-4"></i>
-            <p class="text-abyss font-mechanical">
-              No contraptions found in your vicinity. Expand your search radius
-              or check back after the next airship arrival!
-            </p>
+          <!-- Tab Content -->
+          <!-- Available Tools Tab -->
+          <div v-if="activeTab === 'available'">
+            <h2 class="font-ornate text-2xl text-royal mb-4 lg:hidden">
+              Available Contraptions
+            </h2>
+
+            <div
+              v-if="filteredAvailableItems.length === 0"
+              class="rounded-xl border-3 border-royal p-8 text-center bg-cream"
+            >
+              <i class="fas fa-cogs text-royal text-4xl mb-4"></i>
+              <p class="text-abyss font-mechanical">
+                No contraptions found in your vicinity. Expand your search
+                radius or check back after the next airship arrival!
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              <tool-card
+                v-for="item in filteredAvailableItems"
+                :key="item.id"
+                :item="item"
+                @borrow-request="openBorrowModal"
+                class="rounded-xl border-3 border-royal relative overflow-hidden bg-cream before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-royal before:to-abyss"
+              ></tool-card>
+            </div>
+
+            <div class="mt-6 flex justify-center lg:hidden">
+              <button
+                class="px-4 py-2 bg-royal text-cream rounded-full border-2 border-cream font-mechanical text-sm transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0"
+              >
+                <i class="fas fa-spinner mr-2"></i> Load More
+              </button>
+            </div>
           </div>
 
-          <tool-card
-            v-for="item in filteredAvailableItems"
-            :key="item.id"
-            :item="item"
-            @borrow-request="openBorrowModal"
-          ></tool-card>
-        </div>
+          <!-- My Gear Tab -->
+          <div v-else-if="activeTab === 'myItems'">
+            <h2 class="font-ornate text-2xl text-royal mb-4 lg:hidden">
+              My Workshop
+            </h2>
 
-        <!-- My Tools Tab -->
-        <div v-else-if="activeTab === 'myItems'" class="space-y-6">
-          <div
-            v-if="myItems.length === 0"
-            class="steampunk-card p-8 text-center"
-          >
-            <i class="fas fa-box-open text-royal text-4xl mb-4"></i>
-            <p class="text-abyss font-mechanical mb-4">
-              Your workshop appears to be empty, inventor!
-            </p>
-            <button @click="toggleNewItemModal" class="steampunk-button">
-              Register Your First Contraption
-            </button>
+            <div
+              v-if="myItems.length === 0"
+              class="rounded-xl border-3 border-royal p-8 text-center bg-cream"
+            >
+              <i class="fas fa-box-open text-royal text-4xl mb-4"></i>
+              <p class="text-abyss font-mechanical mb-4">
+                Your workshop appears to be empty, inventor!
+              </p>
+              <button
+                @click="toggleNewItemModal"
+                class="px-6 py-3 bg-royal text-cream rounded-full border-2 border-cream font-mechanical uppercase tracking-wider shadow-steampunk transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0"
+              >
+                Register Your First Contraption
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <my-tool-card
+                v-for="item in myItems"
+                :key="item.id"
+                :item="item"
+                @edit="editItem"
+                @toggle-privacy="toggleItemPrivacy"
+                @delete="confirmDeleteItem"
+                class="rounded-xl border-3 border-royal relative overflow-hidden bg-cream before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-royal before:to-abyss"
+              ></my-tool-card>
+            </div>
           </div>
 
-          <my-tool-card
-            v-for="item in myItems"
-            :key="item.id"
-            :item="item"
-            @edit="editItem"
-            @toggle-privacy="toggleItemPrivacy"
-            @delete="confirmDeleteItem"
-          ></my-tool-card>
-        </div>
+          <!-- Messages Tab -->
+          <div v-else-if="activeTab === 'messages'">
+            <h2 class="font-ornate text-2xl text-royal mb-4 lg:hidden">
+              Pneumatic Message Tube
+            </h2>
 
-        <!-- Messages Tab -->
-        <div
-          v-else-if="activeTab === 'messages'"
-          class="steampunk-card overflow-hidden"
-        >
-          <div v-if="messages.length === 0" class="p-8 text-center">
-            <i class="fas fa-scroll text-royal text-4xl mb-4"></i>
-            <p class="text-abyss font-mechanical">
-              Your pneumatic message tube is empty! When inventors request to
-              borrow your contraptions, messages will appear here.
-            </p>
-          </div>
-          <div v-else>
-            <div class="divide-y divide-royal divide-opacity-20">
-              <message-preview
-                v-for="message in messages"
-                :key="message.id"
-                :message="message"
-                @open="openMessageDetail"
-              ></message-preview>
+            <div
+              class="rounded-xl border-3 border-royal overflow-hidden bg-cream"
+            >
+              <div v-if="messages.length === 0" class="p-8 text-center">
+                <i class="fas fa-scroll text-royal text-4xl mb-4"></i>
+                <p class="text-abyss font-mechanical">
+                  Your pneumatic message tube is empty! When inventors request
+                  to borrow your contraptions, messages will appear here.
+                </p>
+              </div>
+              <div v-else>
+                <div class="divide-y divide-royal divide-opacity-20">
+                  <message-preview
+                    v-for="message in messages"
+                    :key="message.id"
+                    :message="message"
+                    @open="openMessageDetail"
+                  ></message-preview>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -222,6 +487,7 @@
         :new-item="newItem"
         @close="toggleNewItemModal"
         @add="addNewItem"
+        class="modal-enter"
       ></add-item-modal>
 
       <borrow-request-modal
@@ -230,6 +496,7 @@
         :borrow-request="borrowRequest"
         @close="showBorrowModal = false"
         @send="sendBorrowRequest"
+        class="modal-enter"
       ></borrow-request-modal>
 
       <message-detail-modal
@@ -241,19 +508,77 @@
         @approve="approveRequest"
         @reject="rejectRequest"
         @update:message-reply="messageReply = $event"
+        class="modal-enter"
       ></message-detail-modal>
 
       <!-- Toast Notification -->
       <div
         v-if="showToast"
-        class="steampunk-toast fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center"
+        class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center bg-royal text-cream rounded-xl px-6 py-3 border-2 border-cream shadow-steampunk toast-enter"
       >
         <i class="fas fa-cog fa-spin mr-2"></i>
         <span>{{ toastMessage }}</span>
       </div>
+
+      <!-- Keyboard Shortcuts (hidden) -->
+      <div class="sr-only">
+        <!-- These will be activated via JavaScript -->
+        <button id="shortcut-add-item" @click="toggleNewItemModal">
+          Add Item
+        </button>
+        <button id="shortcut-find-gear" @click="activeTab = 'available'">
+          Find Gear
+        </button>
+        <button id="shortcut-my-gear" @click="activeTab = 'myItems'">
+          My Gear
+        </button>
+        <button id="shortcut-messages" @click="activeTab = 'messages'">
+          Messages
+        </button>
+      </div>
     </div>
 
-    <!-- Import components as type="module" -->
+    <!-- Import components and data as type="module" -->
     <script type="module" src="./app.js"></script>
+
+    <!-- Keyboard Shortcuts Script -->
+    <script>
+      document.addEventListener("keydown", function (event) {
+        // Alt+N to add new item
+        if (event.altKey && event.key === "n") {
+          event.preventDefault();
+          document.getElementById("shortcut-add-item").click();
+        }
+
+        // Alt+1 for Find Gear
+        if (event.altKey && event.key === "1") {
+          event.preventDefault();
+          document.getElementById("shortcut-find-gear").click();
+        }
+
+        // Alt+2 for My Gear
+        if (event.altKey && event.key === "2") {
+          event.preventDefault();
+          document.getElementById("shortcut-my-gear").click();
+        }
+
+        // Alt+3 for Messages
+        if (event.altKey && event.key === "3") {
+          event.preventDefault();
+          document.getElementById("shortcut-messages").click();
+        }
+
+        // Escape key to close modals
+        if (event.key === "Escape") {
+          const app = document.getElementById("app").__vue_app__;
+          if (app) {
+            const vm = app._instance.proxy;
+            if (vm.showNewItemModal) vm.toggleNewItemModal();
+            if (vm.showBorrowModal) vm.showBorrowModal = false;
+            if (vm.showMessageDetail) vm.showMessageDetail = false;
+          }
+        }
+      });
+    </script>
   </body>
 </html>

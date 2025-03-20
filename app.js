@@ -8,8 +8,21 @@ import {
     messageDetailModal
 } from './components.js';
 
+// Import data layer from hydrate.js
+import {
+    getData,
+    addItem,
+    sendBorrowRequest,
+    updateItem,
+    deleteItem,
+    sendMessage,
+    updateLocation,
+    getLocationSuggestions,
+    formTemplates
+} from './hydrate.js';
+
 // Main application logic
-const { createApp, ref, computed, watch } = Vue;
+const { createApp, ref, computed, watch, onMounted } = Vue;
 
 // Create the Vue app
 createApp({
@@ -38,9 +51,10 @@ createApp({
         const showMessageDetail = ref(false);
         const showToast = ref(false);
         const toastMessage = ref('');
+        const loading = ref(false);
 
         // User data
-        const unreadMessages = ref(2);
+        const unreadMessages = ref(0);
 
         // Currently selected items
         const selectedItem = ref({});
@@ -48,112 +62,48 @@ createApp({
         const messageReply = ref('');
 
         // Form data
-        const newItem = ref({
-            name: '',
-            description: '',
-            condition: 'Good',
-            privacy: 'Public',
-            image: '/api/placeholder/400/320'
-        });
+        const newItem = ref({ ...formTemplates.newItem });
+        const borrowRequest = ref({ ...formTemplates.borrowRequest });
 
-        const borrowRequest = ref({
-            startDate: '',
-            endDate: '',
-            message: ''
-        });
+        // Data collections
+        const availableItems = ref([]);
+        const myItems = ref([]);
+        const messages = ref([]);
 
         // ==================
-        // Mock Data (would come from API in production)
+        // Data Loading Methods
         // ==================
 
-        // Available tools in the community
-        const availableItems = ref([
-            {
-                id: 1,
-                name: 'Power Drill (Cordless)',
-                description: 'Bosch 18V cordless drill with two batteries and charger. Perfect for home projects.',
-                image: '/api/placeholder/400/320',
-                condition: 'Excellent',
-                distance: 0.8,
-                availabilityText: 'Anytime',
-                ownerName: 'Solomon G.',
-                ownerAvatar: '/api/placeholder/100/100',
-                ownerRating: 4.8
-            },
-            {
-                id: 2,
-                name: 'Gardening Tool Set',
-                description: 'Complete set with trowel, pruners, rake, and gloves. Great for urban gardening.',
-                image: '/api/placeholder/400/320',
-                condition: 'Good',
-                distance: 1.2,
-                availabilityText: 'Weekends',
-                ownerName: 'Kailash R.',
-                ownerAvatar: '/api/placeholder/100/100',
-                ownerRating: 4.5
-            },
-            {
-                id: 3,
-                name: 'Linear Motor Prototyping Kit',
-                description: 'Custom-built testing equipment for linear motor design with precision measuring tools.',
-                image: '/api/placeholder/400/320',
-                condition: 'Fair',
-                distance: 1.5,
-                availabilityText: 'Mon-Fri after 6pm',
-                ownerName: 'Solomon G.',
-                ownerAvatar: '/api/placeholder/100/100',
-                ownerRating: 4.9
-            }
-        ]);
-
-        // User's own tools
-        const myItems = ref([
-            {
-                id: 101,
-                name: 'Flow Toy Repair Kit',
-                description: 'Professional tools for repairing LED flow toys including soldering station, tapes, and circuit testers.',
-                image: '/api/placeholder/400/320',
-                condition: 'Excellent',
-                privacy: 'Public',
-                borrower: null
-            },
-            {
-                id: 102,
-                name: 'Hoop Making Tools',
-                description: 'Set of specialized tools for making and repairing flow hoops. Includes tape, connectors, and sizing tools.',
-                image: '/api/placeholder/400/320',
-                condition: 'Good',
-                privacy: 'Friends Only',
-                borrower: 'Kailash R.'
-            }
-        ]);
-
-        // Message inbox
-        const messages = ref([
-            {
-                id: 201,
-                senderName: 'Solomon G.',
-                senderAvatar: '/api/placeholder/100/100',
-                subject: 'Request to borrow your Flow Toy Repair Kit',
-                content: 'Hi Amit! I\'m working on some new LED patterns for my props and need to fix some wiring issues. Your repair kit looks perfect for what I need. I\'d take good care of it and share any cool patterns I develop!',
-                date: 'Today, 10:23 AM',
-                isRead: false,
-                requestDetails: {
-                    itemName: 'Flow Toy Repair Kit',
-                    startDate: '2025-03-22',
-                    endDate: '2025-03-24'
+        // Load data based on active tab
+        const loadData = async (tab = activeTab.value) => {
+            loading.value = true;
+            try {
+                switch (tab) {
+                    case 'available':
+                        if (availableItems.value.length === 0) {
+                            availableItems.value = await getData('availableGear', 500);
+                        }
+                        break;
+                    case 'myItems':
+                        if (myItems.value.length === 0) {
+                            myItems.value = await getData('myGear', 500);
+                        }
+                        break;
+                    case 'messages':
+                        if (messages.value.length === 0) {
+                            messages.value = await getData('messages', 500);
+                            // Count unread messages
+                            unreadMessages.value = messages.value.filter(m => !m.isRead).length;
+                        }
+                        break;
                 }
-            },
-            {
-                id: 202,
-                senderName: 'Kailash R.',
-                senderAvatar: '/api/placeholder/100/100',
-                subject: 'Thanks for the hoop tools!',
-                content: 'Just wanted to say thanks for lending me your hoop making tools! I was able to fix my broken hoop and even make a new one for a beginner workshop this weekend. Will return them tomorrow as promised!',
-                date: 'Yesterday, 4:15 PM',
-                isRead: false
+            } catch (error) {
+                console.error("Error loading data:", error);
+                displayToast("Failed to load data. Please try again.");
+            } finally {
+                loading.value = false;
             }
-        ]);
+        };
 
         // ==================
         // Computed Properties
@@ -164,7 +114,8 @@ createApp({
             return availableItems.value.filter(item => {
                 // Filter by search query
                 if (searchQuery.value && !item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) &&
-                    !item.description.toLowerCase().includes(searchQuery.value.toLowerCase())) {
+                    !item.description.toLowerCase().includes(searchQuery.value.toLowerCase()) &&
+                    !item.ownerName.toLowerCase().includes(searchQuery.value.toLowerCase())) {
                     return false;
                 }
 
@@ -188,13 +139,7 @@ createApp({
             showNewItemModal.value = !showNewItemModal.value;
             if (!showNewItemModal.value) {
                 // Reset form on close
-                newItem.value = {
-                    name: '',
-                    description: '',
-                    condition: 'Good',
-                    privacy: 'Public',
-                    image: '/api/placeholder/400/320'
-                };
+                newItem.value = { ...formTemplates.newItem };
             }
         };
 
@@ -211,60 +156,88 @@ createApp({
         // Item Management
 
         // Add a new item to the user's inventory
-        const addNewItem = () => {
-            const newItemObject = {
-                id: Date.now(), // Use timestamp as a unique ID
-                name: newItem.value.name,
-                description: newItem.value.description,
-                condition: newItem.value.condition,
-                privacy: newItem.value.privacy,
-                image: '/api/placeholder/400/320', // Placeholder image
-                borrower: null
-            };
+        const addNewItem = async () => {
+            loading.value = true;
+            try {
+                const result = await addItem(newItem.value);
+                myItems.value.unshift(result); // Add to the beginning of the array
 
-            myItems.value.unshift(newItemObject); // Add to the beginning of the array
+                // Optionally, if privacy is set to Public, also add to available items
+                if (newItem.value.privacy === 'Public') {
+                    const availableItemObject = {
+                        ...result,
+                        distance: 0, // It's your own item
+                        availabilityText: 'Anytime',
+                        ownerName: 'You',
+                        ownerAvatar: 'https://placehold.co/100x100/261FB3/FBE4D6?text=Y',
+                        ownerRating: 5.0
+                    };
 
-            // Optionally, if privacy is set to Public, also add to available items
-            if (newItem.value.privacy === 'Public') {
-                const availableItemObject = {
-                    ...newItemObject,
-                    distance: 0, // It's your own item
-                    availabilityText: 'Anytime',
-                    ownerName: 'You',
-                    ownerAvatar: '/api/placeholder/100/100',
-                    ownerRating: 5.0
-                };
+                    availableItems.value.unshift(availableItemObject);
+                }
 
-                availableItems.value.unshift(availableItemObject);
+                toggleNewItemModal();
+                displayToast('Contraption added to your workshop!');
+            } catch (error) {
+                console.error("Error adding item:", error);
+                displayToast("Failed to add contraption. Please try again.");
+            } finally {
+                loading.value = false;
             }
-
-            toggleNewItemModal();
-            displayToast('Tool added successfully!');
         };
 
         // Edit an existing item
         const editItem = (item) => {
-            // In a real app, this would open an edit form
-            displayToast('Edit functionality would open here');
+            // In a real app, this would open an edit form with populated data
+            displayToast(`Editing ${item.name}... (Feature coming soon!)`);
         };
 
         // Toggle the privacy setting of an item
-        const toggleItemPrivacy = (item) => {
+        const toggleItemPrivacy = async (item) => {
             // Cycle through privacy settings
             const privacyLevels = ['Public', 'Friends Only', 'Private'];
             const currentIndex = privacyLevels.indexOf(item.privacy);
             const nextIndex = (currentIndex + 1) % privacyLevels.length;
-            item.privacy = privacyLevels[nextIndex];
+            const newPrivacy = privacyLevels[nextIndex];
 
-            displayToast(`Privacy updated to ${item.privacy}`);
+            loading.value = true;
+            try {
+                // Update the item in our data layer
+                await updateItem(item.id, { privacy: newPrivacy });
+
+                // Update local state
+                item.privacy = newPrivacy;
+
+                displayToast(`Privacy updated to ${newPrivacy}`);
+            } catch (error) {
+                console.error("Error updating privacy:", error);
+                displayToast("Failed to update privacy. Please try again.");
+            } finally {
+                loading.value = false;
+            }
         };
 
         // Delete an item after confirmation
-        const confirmDeleteItem = (item) => {
-            // In a real app, this would show a confirmation dialog
-            if (confirm('Are you sure you want to delete this item?')) {
-                myItems.value = myItems.value.filter(i => i.id !== item.id);
-                displayToast('Item deleted successfully');
+        const confirmDeleteItem = async (item) => {
+            if (confirm(`Are you sure you want to delete "${item.name}"?`)) {
+                loading.value = true;
+                try {
+                    // Delete the item from our data layer
+                    await deleteItem(item.id);
+
+                    // Update local state
+                    myItems.value = myItems.value.filter(i => i.id !== item.id);
+
+                    // Also remove from available items if it exists there
+                    availableItems.value = availableItems.value.filter(i => i.id !== item.id);
+
+                    displayToast('Item deleted from your workshop');
+                } catch (error) {
+                    console.error("Error deleting item:", error);
+                    displayToast("Failed to delete item. Please try again.");
+                } finally {
+                    loading.value = false;
+                }
             }
         };
 
@@ -286,12 +259,20 @@ createApp({
         };
 
         // Send a borrow request
-        const sendBorrowRequest = () => {
-            showBorrowModal.value = false;
+        const sendBorrowRequest = async () => {
+            loading.value = true;
+            try {
+                // Send the request through our data layer
+                await sendBorrowRequest(selectedItem.value.id, borrowRequest.value);
 
-            // In a real app, this would send the request to the server
-            // For the MVP, we'll just show a success message
-            displayToast('Borrow request sent! You\'ll get a response soon.');
+                showBorrowModal.value = false;
+                displayToast('Borrow request dispatched! You\'ll get a response soon.');
+            } catch (error) {
+                console.error("Error sending borrow request:", error);
+                displayToast("Failed to send request. Please try again.");
+            } finally {
+                loading.value = false;
+            }
         };
 
         // Messaging
@@ -301,7 +282,7 @@ createApp({
             selectedMessage.value = message;
             showMessageDetail.value = true;
 
-            // Mark as read
+            // Mark as read if not already
             if (!message.isRead) {
                 message.isRead = true;
                 unreadMessages.value--;
@@ -309,90 +290,133 @@ createApp({
         };
 
         // Send a reply to a message
-        const sendReply = () => {
+        const sendReply = async () => {
             if (!messageReply.value.trim()) return;
 
-            // In a real app, this would send the reply to the server
-            displayToast('Reply sent!');
-            showMessageDetail.value = false;
-            messageReply.value = '';
+            loading.value = true;
+            try {
+                // Send the reply through our data layer
+                await sendMessage(selectedMessage.value.senderName, messageReply.value);
+
+                displayToast('Reply sent via pneumatic tube!');
+                showMessageDetail.value = false;
+                messageReply.value = '';
+            } catch (error) {
+                console.error("Error sending reply:", error);
+                displayToast("Failed to send reply. Please try again.");
+            } finally {
+                loading.value = false;
+            }
         };
 
         // Approve a borrow request
-        const approveRequest = () => {
-            // In a real app, this would update the status in the database
-            displayToast('Request approved! The borrower has been notified.');
-            showMessageDetail.value = false;
+        const approveRequest = async () => {
+            loading.value = true;
+            try {
+                // Update the item in our data layer to show it's now borrowed
+                const itemToUpdate = myItems.value.find(item =>
+                    item.name === selectedMessage.value.requestDetails.itemName
+                );
 
-            // For the MVP, let's update the UI to show the item is borrowed
-            const itemToUpdate = myItems.value.find(item =>
-                item.name === selectedMessage.value.requestDetails.itemName
-            );
+                if (itemToUpdate) {
+                    await updateItem(itemToUpdate.id, { borrower: selectedMessage.value.senderName });
+                    itemToUpdate.borrower = selectedMessage.value.senderName;
+                }
 
-            if (itemToUpdate) {
-                itemToUpdate.borrower = selectedMessage.value.senderName;
+                displayToast('Request approved! The borrower has been notified.');
+                showMessageDetail.value = false;
+            } catch (error) {
+                console.error("Error approving request:", error);
+                displayToast("Failed to approve request. Please try again.");
+            } finally {
+                loading.value = false;
             }
         };
 
         // Reject a borrow request
-        const rejectRequest = () => {
-            // In a real app, this would update the status in the database
-            displayToast('Request declined. The borrower has been notified.');
-            showMessageDetail.value = false;
+        const rejectRequest = async () => {
+            loading.value = true;
+            try {
+                // In a real app, we would update the request status in the database
+                displayToast('Request declined. The borrower has been notified.');
+                showMessageDetail.value = false;
+            } catch (error) {
+                console.error("Error rejecting request:", error);
+                displayToast("Failed to reject request. Please try again.");
+            } finally {
+                loading.value = false;
+            }
         };
 
         // Location
 
         // Detect the user's location
-        const detectLocation = () => {
-            // In a real app, this would use the browser's geolocation API
-            // For the MVP, we'll just simulate a location change
-            setTimeout(() => {
-                currentLocation.value = 'Indiranagar, Bengaluru';
-                displayToast('Location updated');
-            }, 1000);
+        const detectLocation = async () => {
+            displayToast('Detecting your location...');
+            loading.value = true;
+
+            try {
+                // In a real app, this would use the browser's geolocation API
+                // For the MVP, we'll use our simulated API
+                const result = await updateLocation('Indiranagar, Bengaluru');
+                currentLocation.value = result.location;
+                displayToast('Location updated to ' + result.location);
+
+                // Refresh available items based on new location
+                availableItems.value = await getData('availableGear', 500);
+            } catch (error) {
+                console.error("Error updating location:", error);
+                displayToast("Failed to update location. Please try again.");
+            } finally {
+                loading.value = false;
+            }
         };
 
         // ==================
         // Watchers
         // ==================
 
-        // Watch for changes in search parameters
+        // Watch for changes in search parameters to refresh results
         watch([searchQuery, searchRadius], () => {
-            // In a real app, this might trigger a server request or complex filtering
+            // In a real app, this might trigger a server request for filtered data
             console.log('Search parameters changed');
+        });
+
+        // Watch for active tab changes to load relevant data
+        watch(activeTab, (newTab) => {
+            loadData(newTab);
         });
 
         // ==================
         // Lifecycle Hooks
         // ==================
 
-        // Initialization code
-        const initializeApp = () => {
-            // In a real app, we might check for saved data, handle authentication, etc.
-            console.log('App initialized');
+        // Initialize the app when mounted
+        onMounted(async () => {
+            // Load initial data for the active tab
+            await loadData();
 
-            // Set up event handlers for back button, etc.
-            window.addEventListener('popstate', () => {
-                if (showNewItemModal.value) {
-                    showNewItemModal.value = false;
-                    return;
+            // Set up keyboard shortcuts (beyond what's in the HTML)
+            document.addEventListener('keydown', (e) => {
+                // Ctrl+F to focus search when on the available tab
+                if (e.ctrlKey && e.key === 'f' && activeTab.value === 'available') {
+                    e.preventDefault();
+                    document.querySelector('input[placeholder="Search for gears and contraptions..."]')?.focus();
                 }
 
-                if (showBorrowModal.value) {
-                    showBorrowModal.value = false;
-                    return;
-                }
-
-                if (showMessageDetail.value) {
-                    showMessageDetail.value = false;
-                    return;
+                // Ctrl+/ to show keyboard shortcuts
+                if (e.ctrlKey && e.key === '/') {
+                    e.preventDefault();
+                    displayToast('Keyboard Shortcuts: Alt+N (Add), Alt+1/2/3 (Tabs), Ctrl+F (Search)');
                 }
             });
-        };
 
-        // Call initialization function
-        initializeApp();
+            // Check if we need to show a welcome message
+            if (localStorage.getItem('gearShareFirstVisit') !== 'false') {
+                displayToast('Welcome to GearShare! Start by adding your tools or browse what\'s available.');
+                localStorage.setItem('gearShareFirstVisit', 'false');
+            }
+        });
 
         // ==================
         // Return All Reactive Data and Methods
@@ -408,6 +432,7 @@ createApp({
             showMessageDetail,
             showToast,
             toastMessage,
+            loading,
             selectedItem,
             selectedMessage,
             messageReply,

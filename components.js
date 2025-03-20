@@ -1,5 +1,5 @@
-// Modern Vue 3 component approach
-// Use this as your components.js file
+// Modern Vue 3 component approach with Tailwind styles
+// Each component is optimized for both desktop and mobile experiences
 
 const toolCard = {
   props: {
@@ -9,16 +9,17 @@ const toolCard = {
     }
   },
   template: `
-    <div class="steampunk-card overflow-hidden tool-card relative">
-      <div class="cog-decoration cog-top-right"></div>
+    <div class="overflow-hidden shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group">
       <div class="md:flex">
-        <div class="md:flex-shrink-0">
-          <img class="h-48 w-full object-cover md:w-48 tool-card-image" :src="item.image" :alt="item.name">
+        <div class="md:flex-shrink-0 relative">
+          <img class="h-48 w-full object-cover md:w-48 rounded-tl-lg md:rounded-bl-lg md:rounded-tr-none rounded-tr-lg" 
+               :src="item.image" 
+               :alt="item.name">
           <div class="absolute top-2 right-2">
-            <span :class="['steampunk-badge', 
-              item.condition === 'Excellent' ? 'bg-royal' : 
-              item.condition === 'Good' ? 'bg-midnight' : 
-              'bg-abyss']">
+            <span :class="['px-2 py-1 text-xs rounded-full border-2 border-cream font-mechanical font-bold', 
+              item.condition === 'Excellent' ? 'bg-royal text-cream' : 
+              item.condition === 'Good' ? 'bg-midnight text-cream' : 
+              'bg-abyss text-cream']">
               {{ item.condition }}
             </span>
           </div>
@@ -26,16 +27,25 @@ const toolCard = {
         <div class="p-4 flex-1">
           <div class="flex justify-between items-start">
             <div>
-              <h3 class="text-lg font-ornate text-royal">{{ item.name }}</h3>
-              <p class="text-sm font-mechanical text-abyss mt-1">{{ item.distance }} km away • Available {{ item.availabilityText }}</p>
+              <h3 class="text-xl font-ornate text-royal tracking-wide">{{ item.name }}</h3>
+              <p class="text-sm font-mechanical text-abyss mt-1 flex flex-wrap items-center">
+                <span class="flex items-center mr-3">
+                  <i class="fas fa-map-marker-alt text-royal mr-1"></i> {{ item.distance }} km away
+                </span>
+                <span class="flex items-center">
+                  <i class="far fa-clock text-royal mr-1"></i> {{ item.availabilityText }}
+                </span>
+              </p>
             </div>
           </div>
           
-          <p class="mt-2 text-abyss text-sm">{{ item.description }}</p>
+          <p class="mt-3 text-abyss text-sm leading-relaxed">{{ item.description }}</p>
           
           <div class="mt-4 flex items-center">
-            <img class="h-8 w-8 rounded-full border-2 border-royal" :src="item.ownerAvatar" :alt="item.ownerName">
-            <span class="ml-2 text-sm font-mechanical text-abyss">{{ item.ownerName }}</span>
+            <div class="flex items-center">
+              <img class="h-8 w-8 rounded-full border-2 border-royal" :src="item.ownerAvatar" :alt="item.ownerName">
+              <span class="ml-2 text-sm font-mechanical text-abyss">{{ item.ownerName }}</span>
+            </div>
             <div class="ml-auto flex items-center">
               <span class="text-royal mr-1">★</span>
               <span class="text-sm text-abyss">{{ item.ownerRating }}</span>
@@ -43,7 +53,8 @@ const toolCard = {
           </div>
           
           <div class="mt-4 flex justify-end">
-            <button @click="$emit('borrow-request', item)" class="steampunk-button">
+            <button @click="$emit('borrow-request', item)" 
+                    class="px-4 py-2 bg-royal text-cream rounded-full border-2 border-cream font-mechanical text-sm transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0 flex items-center shadow-md group-hover:shadow-lg">
               <i class="fas fa-handshake mr-2"></i> Request Usage
             </button>
           </div>
@@ -61,41 +72,48 @@ const myToolCard = {
     }
   },
   template: `
-    <div class="steampunk-card overflow-hidden tool-card">
+    <div class="overflow-hidden shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group">
       <div class="md:flex">
-        <div class="md:flex-shrink-0">
-          <img class="h-48 w-full object-cover md:w-48 tool-card-image" :src="item.image" :alt="item.name">
+        <div class="md:flex-shrink-0 relative">
+          <img class="h-48 w-full object-cover md:w-48 rounded-tl-lg md:rounded-bl-lg md:rounded-tr-none rounded-tr-lg" 
+               :src="item.image" 
+               :alt="item.name">
+          <span :class="['absolute top-2 right-2 px-2 py-1 text-xs rounded-full border border-cream font-mechanical', 
+            item.privacy === 'Public' ? 'bg-royal text-cream' : 
+            item.privacy === 'Friends Only' ? 'bg-midnight text-cream' : 
+            'bg-abyss text-cream']">
+            {{ item.privacy }}
+          </span>
         </div>
         <div class="p-4 flex-1">
           <div class="flex justify-between items-start">
             <div>
-              <h3 class="text-lg font-ornate text-royal">{{ item.name }}</h3>
-              <p v-if="item.borrower" class="text-sm font-mechanical text-red-600 mt-1">
-                Currently operated by {{ item.borrower }}
+              <h3 class="text-xl font-ornate text-royal tracking-wide">{{ item.name }}</h3>
+              <p v-if="item.borrower" class="text-sm font-mechanical text-red-600 mt-1 flex items-center">
+                <i class="fas fa-user-clock mr-1"></i> Currently operated by {{ item.borrower }}
               </p>
-              <p v-else class="text-sm font-mechanical text-green-600 mt-1">
-                Available for community use
+              <p v-else class="text-sm font-mechanical text-green-600 mt-1 flex items-center">
+                <i class="fas fa-check-circle mr-1"></i> Available for community use
               </p>
             </div>
-            <span :class="['steampunk-badge', 
-              item.privacy === 'Public' ? 'bg-royal' : 
-              item.privacy === 'Friends Only' ? 'bg-midnight' : 
-              'bg-abyss']">
-              {{ item.privacy }}
-            </span>
           </div>
           
-          <p class="mt-2 text-abyss text-sm">{{ item.description }}</p>
+          <p class="mt-3 text-abyss text-sm leading-relaxed">{{ item.description }}</p>
           
           <div class="mt-4 flex justify-between">
-            <button @click="$emit('edit', item)" class="text-royal hover:text-midnight font-mechanical">
+            <button @click="$emit('edit', item)" 
+                    class="text-royal hover:text-midnight font-mechanical transition-colors duration-200 flex items-center bg-royal bg-opacity-0 hover:bg-opacity-10 py-1 px-3 rounded">
               <i class="fas fa-edit mr-1"></i> Modify
             </button>
-            <div>
-              <button @click="$emit('toggle-privacy', item)" class="text-royal hover:text-midnight mr-3">
+            <div class="flex space-x-2">
+              <button @click="$emit('toggle-privacy', item)" 
+                      class="text-royal hover:text-midnight transition-colors duration-200 bg-royal bg-opacity-0 hover:bg-opacity-10 py-1 px-2 rounded"
+                      :title="item.privacy === 'Public' ? 'Make private' : item.privacy === 'Friends Only' ? 'Make public' : 'Share with friends'">
                 <i :class="['fas', item.privacy === 'Public' ? 'fa-eye' : item.privacy === 'Friends Only' ? 'fa-user-friends' : 'fa-eye-slash']"></i>
               </button>
-              <button @click="$emit('delete', item)" class="text-red-600 hover:text-red-800">
+              <button @click="$emit('delete', item)" 
+                      class="text-red-600 hover:text-red-800 transition-colors duration-200 bg-red-600 bg-opacity-0 hover:bg-opacity-10 py-1 px-2 rounded"
+                      title="Delete item">
                 <i class="fas fa-trash-alt"></i>
               </button>
             </div>
@@ -114,14 +132,15 @@ const messagePreview = {
     }
   },
   template: `
-    <div class="p-4 hover:bg-cream cursor-pointer flex items-start" @click="$emit('open', message)">
+    <div class="p-4 hover:bg-royal hover:bg-opacity-5 cursor-pointer transition-colors duration-200 flex items-start" @click="$emit('open', message)">
       <img class="h-12 w-12 rounded-full border-2 border-royal mr-3" :src="message.senderAvatar" :alt="message.senderName">
       <div class="flex-1">
         <div class="flex justify-between">
-          <h4 class="font-ornate text-royal">{{ message.senderName }}</h4>
-          <span v-if="!message.isRead" class="bg-royal h-3 w-3 rounded-full"></span>
+          <h4 class="font-ornate text-royal text-lg">{{ message.senderName }}</h4>
+          <span v-if="!message.isRead" class="bg-royal h-3 w-3 rounded-full flex-shrink-0"></span>
         </div>
-        <p class="text-abyss font-mechanical text-sm">{{ message.subject }}</p>
+        <p class="text-abyss font-mechanical text-sm font-bold">{{ message.subject }}</p>
+        <p class="text-sm text-abyss opacity-70 truncate pr-4">{{ message.content.substring(0, 60) }}{{ message.content.length > 60 ? '...' : '' }}</p>
         <p class="text-abyss text-opacity-70 text-xs mt-1">{{ message.date }}</p>
       </div>
     </div>
@@ -137,11 +156,14 @@ const addItemModal = {
   },
   template: `
     <div class="fixed inset-0 bg-abyss bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div class="steampunk-modal w-full max-w-md mx-auto relative">
-        <div class="steampunk-modal-header py-4 px-6">
-          <h3 class="text-xl">Register New Contraption</h3>
+      <div class="bg-cream rounded-2xl border-3 border-royal overflow-hidden w-full max-w-lg mx-auto shadow-lg relative">
+        <div class="py-4 px-6 bg-gradient-to-r from-royal to-abyss text-cream flex justify-between items-center">
+          <h3 class="text-xl font-ornate">Register New Contraption</h3>
+          <button @click="$emit('close')" class="text-cream hover:text-white transition-colors">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
-        <div class="p-6">
+        <div class="p-6 max-h-[80vh] overflow-y-auto">
           <form @submit.prevent="$emit('add')">
             <div class="mb-4">
               <label class="block text-abyss font-mechanical mb-2" for="item-name">
@@ -152,7 +174,7 @@ const addItemModal = {
                 v-model="newItem.name" 
                 type="text" 
                 placeholder="What marvel are you sharing?" 
-                class="w-full steampunk-input"
+                class="w-full px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300"
                 required
               >
             </div>
@@ -165,7 +187,7 @@ const addItemModal = {
                 id="item-description"
                 v-model="newItem.description" 
                 placeholder="Detail its functions and capabilities..." 
-                class="w-full steampunk-input"
+                class="w-full px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300"
                 rows="3"
                 required
               ></textarea>
@@ -175,17 +197,17 @@ const addItemModal = {
               <label class="block text-abyss font-mechanical mb-2">
                 Operational Condition
               </label>
-              <div class="flex space-x-4">
-                <label class="flex items-center">
-                  <input type="radio" v-model="newItem.condition" value="Excellent" class="mr-1">
+              <div class="flex flex-wrap gap-4">
+                <label class="flex items-center cursor-pointer px-3 py-2 rounded-xl bg-royal bg-opacity-0 hover:bg-opacity-10 transition-colors">
+                  <input type="radio" v-model="newItem.condition" value="Excellent" class="mr-2 text-royal">
                   <span class="text-abyss">Pristine</span>
                 </label>
-                <label class="flex items-center">
-                  <input type="radio" v-model="newItem.condition" value="Good" class="mr-1">
+                <label class="flex items-center cursor-pointer px-3 py-2 rounded-xl bg-royal bg-opacity-0 hover:bg-opacity-10 transition-colors">
+                  <input type="radio" v-model="newItem.condition" value="Good" class="mr-2 text-royal">
                   <span class="text-abyss">Functioning</span>
                 </label>
-                <label class="flex items-center">
-                  <input type="radio" v-model="newItem.condition" value="Fair" class="mr-1">
+                <label class="flex items-center cursor-pointer px-3 py-2 rounded-xl bg-royal bg-opacity-0 hover:bg-opacity-10 transition-colors">
+                  <input type="radio" v-model="newItem.condition" value="Fair" class="mr-2 text-royal">
                   <span class="text-abyss">Requires Care</span>
                 </label>
               </div>
@@ -197,21 +219,28 @@ const addItemModal = {
               </label>
               <select 
                 v-model="newItem.privacy" 
-                class="w-full steampunk-input steampunk-select"
+                class="w-full px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300 appearance-none bg-no-repeat bg-right pr-8"
+                style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 20 20\\' fill=\\'%23261FB3\\'%3E%3Cpath fill-rule=\\'evenodd\\' d=\\'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z\\' clip-rule=\\'evenodd\\' /%3E%3C/svg%3E'); background-size: 1.5em 1.5em;"
               >
                 <option value="Public">Public Registry (All inventors)</option>
                 <option value="Friends Only">Fellow Inventors Only</option>
                 <option value="Private">Workshop Records Only</option>
               </select>
+              <div class="mt-1 text-xs text-abyss opacity-70">
+                <div class="flex items-center"><i class="fas fa-eye mr-1"></i> Public: Visible to everyone in your area</div>
+                <div class="flex items-center"><i class="fas fa-user-friends mr-1"></i> Friends Only: Visible to connected inventors</div>
+                <div class="flex items-center"><i class="fas fa-eye-slash mr-1"></i> Private: Only visible to you</div>
+              </div>
             </div>
             
             <div class="mb-4">
               <label class="block text-abyss font-mechanical mb-2">
                 Daguerreotype
               </label>
-              <div class="border-2 border-dashed border-royal rounded-xl p-6 text-center">
+              <div class="border-2 border-dashed border-royal rounded-xl p-6 text-center hover:bg-royal hover:bg-opacity-5 transition-colors duration-200 cursor-pointer">
                 <i class="fas fa-camera-retro text-royal text-3xl mb-2"></i>
                 <p class="text-sm text-abyss">Tap to capture an image or select from your archives</p>
+                <input type="file" class="hidden" accept="image/*">
               </div>
             </div>
             
@@ -219,13 +248,13 @@ const addItemModal = {
               <button 
                 type="button" 
                 @click="$emit('close')" 
-                class="px-4 py-2 border-2 border-royal text-royal rounded-xl hover:bg-cream font-mechanical"
+                class="px-4 py-2 border-2 border-royal text-royal rounded-xl hover:bg-royal hover:bg-opacity-10 font-mechanical transition-colors duration-200"
               >
                 Cancel
               </button>
               <button 
                 type="submit" 
-                class="steampunk-button"
+                class="px-4 py-2 bg-royal text-cream rounded-xl border-2 border-royal font-mechanical shadow-steampunk transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0"
               >
                 Register Contraption
               </button>
@@ -250,15 +279,18 @@ const borrowRequestModal = {
   },
   template: `
     <div class="fixed inset-0 bg-abyss bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div class="steampunk-modal w-full max-w-md mx-auto">
-        <div class="steampunk-modal-header py-4 px-6">
-          <h3 class="text-xl">Usage Request Protocol</h3>
+      <div class="bg-cream rounded-2xl border-3 border-royal overflow-hidden w-full max-w-md mx-auto shadow-lg relative">
+        <div class="py-4 px-6 bg-gradient-to-r from-royal to-abyss text-cream flex justify-between items-center">
+          <h3 class="text-xl font-ornate">Usage Request Protocol</h3>
+          <button @click="$emit('close')" class="text-cream hover:text-white transition-colors">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
-        <div class="p-6">
+        <div class="p-6 max-h-[80vh] overflow-y-auto">
           <div class="mb-4 flex items-center">
             <img class="h-12 w-12 rounded-full border-2 border-royal mr-4" :src="selectedItem.ownerAvatar" :alt="selectedItem.ownerName">
             <div>
-              <p class="font-ornate text-royal">{{ selectedItem.ownerName }}</p>
+              <p class="font-ornate text-royal text-lg">{{ selectedItem.ownerName }}</p>
               <div class="flex items-center">
                 <span class="text-royal mr-1">★</span>
                 <span class="text-sm text-abyss">{{ selectedItem.ownerRating }}</span>
@@ -266,9 +298,9 @@ const borrowRequestModal = {
             </div>
           </div>
           
-          <div class="mb-4 p-3 bg-cream rounded-xl">
-            <p class="text-sm font-ornate text-royal">{{ selectedItem.name }}</p>
-            <p class="text-xs text-abyss">{{ selectedItem.distance }} km from your workshop</p>
+          <div class="mb-6 p-4 bg-cream bg-opacity-50 rounded-xl border border-royal">
+            <h4 class="text-lg font-ornate text-royal mb-1">{{ selectedItem.name }}</h4>
+            <p class="text-sm text-abyss">{{ selectedItem.description }}</p>
           </div>
           
           <form @submit.prevent="$emit('send')">
@@ -276,20 +308,25 @@ const borrowRequestModal = {
               <label class="block text-abyss font-mechanical mb-2" for="borrow-dates">
                 Operational Timeline
               </label>
-              <div class="flex space-x-2">
-                <input 
-                  type="date" 
-                  v-model="borrowRequest.startDate"
-                  class="flex-1 steampunk-input"
-                  required
-                >
-                <span class="flex items-center font-mechanical">to</span>
-                <input 
-                  type="date" 
-                  v-model="borrowRequest.endDate"
-                  class="flex-1 steampunk-input"
-                  required
-                >
+              <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                <div class="flex-1">
+                  <label class="text-xs text-abyss mb-1 block">Start Date</label>
+                  <input 
+                    type="date" 
+                    v-model="borrowRequest.startDate"
+                    class="w-full px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300"
+                    required
+                  >
+                </div>
+                <div class="flex-1">
+                  <label class="text-xs text-abyss mb-1 block">End Date</label>
+                  <input 
+                    type="date" 
+                    v-model="borrowRequest.endDate"
+                    class="w-full px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300"
+                    required
+                  >
+                </div>
               </div>
             </div>
             
@@ -301,23 +338,24 @@ const borrowRequestModal = {
                 id="borrow-message"
                 v-model="borrowRequest.message" 
                 placeholder="Explain your intentions and operational requirements..." 
-                class="w-full steampunk-input"
+                class="w-full px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300"
                 rows="3"
                 required
               ></textarea>
+              <p class="mt-1 text-xs text-abyss opacity-70">* Include details about your project and how you'll use this contraption.</p>
             </div>
             
             <div class="flex justify-end space-x-3 mt-6">
               <button 
                 type="button" 
                 @click="$emit('close')" 
-                class="px-4 py-2 border-2 border-royal text-royal rounded-xl hover:bg-cream font-mechanical"
+                class="px-4 py-2 border-2 border-royal text-royal rounded-xl hover:bg-royal hover:bg-opacity-10 font-mechanical transition-colors duration-200"
               >
                 Cancel
               </button>
               <button 
                 type="submit" 
-                class="steampunk-button"
+                class="px-4 py-2 bg-royal text-cream rounded-xl border-2 border-royal font-mechanical shadow-steampunk transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0"
               >
                 Dispatch Request
               </button>
@@ -342,63 +380,75 @@ const messageDetailModal = {
   },
   template: `
     <div class="fixed inset-0 bg-abyss bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div class="steampunk-modal w-full max-w-md mx-auto">
-        <div class="steampunk-modal-header py-4 px-6 flex justify-between items-center">
-          <h3 class="text-xl">Correspondence</h3>
-          <button @click="$emit('close')" class="text-cream hover:text-white">
+      <div class="bg-cream rounded-2xl border-3 border-royal overflow-hidden w-full max-w-md mx-auto shadow-lg relative">
+        <div class="py-4 px-6 bg-gradient-to-r from-royal to-abyss text-cream flex justify-between items-center">
+          <h3 class="text-xl font-ornate">Correspondence</h3>
+          <button @click="$emit('close')" class="text-cream hover:text-white transition-colors">
             <i class="fas fa-times"></i>
           </button>
         </div>
-        <div class="p-6">
+        <div class="p-6 max-h-[80vh] overflow-y-auto">
           <div class="mb-4 flex items-center">
             <img class="h-12 w-12 rounded-full border-2 border-royal mr-4" :src="selectedMessage.senderAvatar" :alt="selectedMessage.senderName">
             <div>
-              <p class="font-ornate text-royal">{{ selectedMessage.senderName }}</p>
+              <p class="font-ornate text-royal text-lg">{{ selectedMessage.senderName }}</p>
               <p class="text-sm text-abyss">{{ selectedMessage.date }}</p>
             </div>
           </div>
           
           <div class="mb-4">
-            <h4 class="font-ornate text-royal">{{ selectedMessage.subject }}</h4>
-            <div class="mt-2 p-3 bg-cream rounded-xl">
-              <p class="text-abyss font-mechanical">{{ selectedMessage.content }}</p>
+            <h4 class="font-ornate text-royal text-lg">{{ selectedMessage.subject }}</h4>
+            <div class="mt-2 p-4 bg-cream bg-opacity-50 rounded-xl border border-royal">
+              <p class="text-abyss font-mechanical whitespace-pre-line">{{ selectedMessage.content }}</p>
             </div>
           </div>
           
-          <div v-if="selectedMessage.requestDetails" class="mb-4 p-3 border-2 border-royal bg-cream bg-opacity-50 rounded-xl">
-            <p class="text-sm font-ornate text-royal">Contraption request: {{ selectedMessage.requestDetails.itemName }}</p>
-            <p class="text-xs text-abyss font-mechanical">From {{ selectedMessage.requestDetails.startDate }} to {{ selectedMessage.requestDetails.endDate }}</p>
+          <div v-if="selectedMessage.requestDetails" class="mb-4 p-4 border-2 border-royal bg-cream bg-opacity-50 rounded-xl">
+            <div class="flex items-center justify-between mb-2">
+              <p class="text-md font-ornate text-royal">Contraption Request</p>
+              <span class="px-2 py-0.5 bg-royal text-cream text-xs rounded-full">Pending</span>
+            </div>
+            <p class="text-md font-mechanical text-abyss font-bold">{{ selectedMessage.requestDetails.itemName }}</p>
+            <p class="text-sm text-abyss font-mechanical mt-1">From {{ selectedMessage.requestDetails.startDate }} to {{ selectedMessage.requestDetails.endDate }}</p>
           </div>
           
           <div v-if="selectedMessage.requestDetails" class="flex space-x-2 justify-end">
             <button 
               @click="$emit('reject')" 
-              class="px-4 py-2 border-2 border-red-600 text-red-600 rounded-xl hover:bg-red-50 font-mechanical"
+              class="px-4 py-2 border-2 border-red-600 text-red-600 rounded-xl hover:bg-red-50 font-mechanical transition-colors duration-200"
             >
               Decline
             </button>
             <button 
               @click="$emit('approve')" 
-              class="steampunk-button"
+              class="px-4 py-2 bg-royal text-cream rounded-xl border-2 border-royal font-mechanical shadow-steampunk transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0"
             >
               Approve
             </button>
           </div>
           
           <div v-else class="mt-4">
+            <label class="block text-abyss font-mechanical mb-2" for="message-reply">
+              Your Reply
+            </label>
             <textarea 
+              id="message-reply"
               :value="messageReply"
               @input="$emit('update:message-reply', $event.target.value)"
               placeholder="Compose your reply..." 
-              class="w-full steampunk-input message-scroll"
+              class="w-full px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300"
               rows="3"
             ></textarea>
             <div class="mt-2 flex justify-end">
               <button 
                 @click="$emit('reply')" 
-                class="steampunk-button"
+                :disabled="!messageReply.trim()"
+                :class="[
+                  'px-4 py-2 bg-royal text-cream rounded-xl border-2 border-royal font-mechanical shadow-steampunk transition-all duration-300 flex items-center',
+                  messageReply.trim() ? 'hover:bg-midnight hover:-translate-y-1 active:translate-y-0' : 'opacity-50 cursor-not-allowed'
+                ]"
               >
-                Send Reply
+                <i class="fas fa-paper-plane mr-2"></i> Send Reply
               </button>
             </div>
           </div>
