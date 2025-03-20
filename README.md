@@ -4,7 +4,8 @@
 
 A hyperlocal tool-sharing platform that builds community resilience while giving the middle finger to the "buy more stuff" economy. Connect with neighbors, share resources, and stick it to Big Hardware, one borrowed tool at a time.
 
-![Steampunk GearShare Interface](/api/placeholder/800/400)
+![WIP Interface]([/api/placeholder/800/400](https://github.com/user-attachments/assets/a0a8815d-7acc-4a22-bceb-0eed3bd09422))
+
 
 ## Core Philosophy
 
@@ -13,7 +14,7 @@ GearShare exists to:
 - Strengthen neighborhood connections and resilience
 - Make specialized tools accessible to everyone
 - Create a solidarity-based alternative to rentier capitalism
-- Look damn good doing it with our steampunk aesthetic
+- Look sexy af doing it!
 
 ## Features
 
