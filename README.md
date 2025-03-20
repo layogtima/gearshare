@@ -10,10 +10,9 @@ A hyperlocal tool-sharing platform that builds community resilience while giving
 ## Core Philosophy
 
 GearShare exists to:
-- Reduce unnecessary consumption and waste
-- Strengthen neighborhood connections and resilience
 - Make specialized tools accessible to everyone
-- Create a solidarity-based alternative to rentier capitalism
+- Strengthen neighborhood connections and resilience
+- Reduce unnecessary consumption and waste
 - Look sexy af doing it!
 
 ## Features
