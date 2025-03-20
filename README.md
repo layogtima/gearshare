@@ -2,7 +2,7 @@
 
 > *Because capitalism wants you to buy your own damn drill, we want you to share it.*
 
-A hyperlocal tool-sharing platform that builds community hacking and connect with fellow DIYers, share resources, one borrowed tool at a time.
+A hyperlocal tool-sharing platform that fosters community hacking and helps you connect with fellow DIYers, share resources, one borrowed tool at a time.
 
 ![WIP Interface](https://github.com/user-attachments/assets/a0a8815d-7acc-4a22-bceb-0eed3bd09422)
 
@@ -176,7 +176,5 @@ GearShare is a collective project for collective benefit. Contributions that ali
 Distributed under the GNU General Public License v3. See `LICENSE` for more information.
 
 ---
-
-*"Under capitalism, man exploits man. Under communism, it's just the opposite." — John Kenneth Galbraith*
 
 *GearShare: Because you don't need to own every damn tool in the hardware store.*
