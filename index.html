@@ -3,11 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ShareSphere - Community Resource Exchange</title>
-    <!-- Core Vue and Tailwind -->
+    <title>GearShare - Community Resource Exchange</title>
+    <!-- Core Vue -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.js"></script>
-    <!-- Using the CDN for development only! For production, use proper build process -->
+    <!-- Tailwind CSS - For development only! -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              cream: "#FBE4D6",
+              royal: "#261FB3",
+              midnight: "#161179",
+              abyss: "#0C0950",
+            },
+            fontFamily: {
+              steampunk: ["Pirata One", "cursive"],
+              ornate: ["Cinzel Decorative", "cursive"],
+              mechanical: ["Special Elite", "cursive"],
+              body: ["Quicksand", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
     <!-- Icon Library -->
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -16,31 +37,33 @@
     <!-- Our custom styles -->
     <link href="./styles.css" rel="stylesheet" />
   </head>
-  <body class="bg-gray-100 min-h-screen">
-    <div id="app" v-cloak>
+  <body class="bg-cream min-h-screen">
+    <div id="app" v-cloak class="app-container py-4">
       <!-- Navigation Bar -->
-      <nav class="solarpunk-gradient shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between h-16">
+      <nav
+        class="steampunk-gradient rounded-2xl shadow-brass mb-6 relative overflow-hidden"
+      >
+        <div class="cog-decoration cog-top-right"></div>
+        <div class="cog-decoration cog-bottom-left"></div>
+        <div class="px-4 py-3">
+          <div class="flex justify-between items-center">
             <div class="flex items-center">
               <div class="flex-shrink-0 flex items-center">
-                <span class="text-green-800 text-xl font-bold"
-                  >💚 SHARE SPHERE</span
-                >
+                <span class="text-xl font-steampunk">⚙️ GEAR SHARE</span>
               </div>
             </div>
             <div class="flex items-center space-x-4">
               <button
                 @click="detectLocation"
-                class="text-green-800 hover:text-green-900 transition duration-300"
+                class="text-cream hover:text-white transition duration-300"
               >
                 <i class="fas fa-location-arrow"></i>
               </button>
               <button
                 @click="toggleNewItemModal"
-                class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300 flex items-center"
+                class="steampunk-button flex items-center"
               >
-                <i class="fas fa-plus mr-2"></i> Add Item
+                <i class="fas fa-plus mr-2"></i> Add Gear
               </button>
             </div>
           </div>
@@ -48,19 +71,17 @@
       </nav>
 
       <!-- Main Content -->
-      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main class="space-y-6">
         <!-- Location Bar -->
-        <div
-          class="bg-white rounded-lg shadow-md p-4 mb-6 flex items-center justify-between"
-        >
+        <div class="steampunk-card p-4 flex items-center justify-between">
           <div class="flex items-center">
-            <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>
-            <span>{{ currentLocation }}</span>
+            <i class="fas fa-map-marker-alt text-royal mr-2"></i>
+            <span class="font-mechanical">{{ currentLocation }}</span>
           </div>
           <div>
             <select
               v-model="searchRadius"
-              class="rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50"
+              class="steampunk-input steampunk-select"
             >
               <option value="1">1 km radius</option>
               <option value="2">2 km radius</option>
@@ -71,41 +92,39 @@
         </div>
 
         <!-- Tab Navigation -->
-        <div class="mb-6 bg-white rounded-lg shadow-md overflow-hidden">
-          <div class="flex">
-            <button
-              @click="activeTab = 'available'"
-              :class="[
-              'flex-1 py-3 px-4 text-center font-medium focus:outline-none transition-colors duration-200',
-              activeTab === 'available' ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-green-100'
-            ]"
+        <div class="steampunk-tabs flex">
+          <button
+            @click="activeTab = 'available'"
+            :class="[
+            'flex-1 py-3 px-4 text-center font-medium focus:outline-none transition-colors duration-200 steampunk-tab',
+            activeTab === 'available' ? 'active' : ''
+          ]"
+          >
+            <i class="fas fa-search mr-2"></i> Find Gear
+          </button>
+          <button
+            @click="activeTab = 'myItems'"
+            :class="[
+            'flex-1 py-3 px-4 text-center font-medium focus:outline-none transition-colors duration-200 steampunk-tab',
+            activeTab === 'myItems' ? 'active' : ''
+          ]"
+          >
+            <i class="fas fa-cogs mr-2"></i> My Gear
+          </button>
+          <button
+            @click="activeTab = 'messages'"
+            :class="[
+            'flex-1 py-3 px-4 text-center font-medium focus:outline-none transition-colors duration-200 steampunk-tab',
+            activeTab === 'messages' ? 'active' : ''
+          ]"
+          >
+            <i class="fas fa-envelope mr-2"></i> Messages
+            <span
+              v-if="unreadMessages > 0"
+              class="ml-1 px-2 py-1 text-xs bg-royal text-cream rounded-full"
+              >{{ unreadMessages }}</span
             >
-              <i class="fas fa-search mr-2"></i> Find Tools
-            </button>
-            <button
-              @click="activeTab = 'myItems'"
-              :class="[
-              'flex-1 py-3 px-4 text-center font-medium focus:outline-none transition-colors duration-200',
-              activeTab === 'myItems' ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-green-100'
-            ]"
-            >
-              <i class="fas fa-toolbox mr-2"></i> My Tools
-            </button>
-            <button
-              @click="activeTab = 'messages'"
-              :class="[
-              'flex-1 py-3 px-4 text-center font-medium focus:outline-none transition-colors duration-200',
-              activeTab === 'messages' ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-green-100'
-            ]"
-            >
-              <i class="fas fa-comments mr-2"></i> Messages
-              <span
-                v-if="unreadMessages > 0"
-                class="ml-1 px-2 py-1 text-xs bg-red-500 text-white rounded-full"
-                >{{ unreadMessages }}</span
-              >
-            </button>
-          </div>
+          </button>
         </div>
 
         <!-- Search Bar (only in Find Tools tab) -->
@@ -114,13 +133,13 @@
             <input
               type="text"
               v-model="searchQuery"
-              placeholder="Search for tools..."
-              class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Search for gears and contraptions..."
+              class="w-full pl-10 pr-4 py-3 steampunk-input"
             />
             <div
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
             >
-              <i class="fas fa-search text-gray-400"></i>
+              <i class="fas fa-search text-royal"></i>
             </div>
           </div>
         </div>
@@ -130,12 +149,12 @@
         <div v-if="activeTab === 'available'" class="space-y-6">
           <div
             v-if="filteredAvailableItems.length === 0"
-            class="bg-white rounded-lg shadow-md p-8 text-center"
+            class="steampunk-card p-8 text-center"
           >
-            <i class="fas fa-tools text-gray-400 text-4xl mb-4"></i>
-            <p class="text-gray-600">
-              No tools found in your area. Try expanding your search radius or
-              check back later!
+            <i class="fas fa-cogs text-royal text-4xl mb-4"></i>
+            <p class="text-abyss font-mechanical">
+              No contraptions found in your vicinity. Expand your search radius
+              or check back after the next airship arrival!
             </p>
           </div>
 
@@ -151,15 +170,14 @@
         <div v-else-if="activeTab === 'myItems'" class="space-y-6">
           <div
             v-if="myItems.length === 0"
-            class="bg-white rounded-lg shadow-md p-8 text-center"
+            class="steampunk-card p-8 text-center"
           >
-            <i class="fas fa-box-open text-gray-400 text-4xl mb-4"></i>
-            <p class="text-gray-600 mb-4">You haven't added any tools yet</p>
-            <button
-              @click="toggleNewItemModal"
-              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md shadow-sm transition duration-300"
-            >
-              Add Your First Tool
+            <i class="fas fa-box-open text-royal text-4xl mb-4"></i>
+            <p class="text-abyss font-mechanical mb-4">
+              Your workshop appears to be empty, inventor!
+            </p>
+            <button @click="toggleNewItemModal" class="steampunk-button">
+              Register Your First Contraption
             </button>
           </div>
 
@@ -176,17 +194,17 @@
         <!-- Messages Tab -->
         <div
           v-else-if="activeTab === 'messages'"
-          class="bg-white rounded-lg shadow-md overflow-hidden"
+          class="steampunk-card overflow-hidden"
         >
           <div v-if="messages.length === 0" class="p-8 text-center">
-            <i class="fas fa-comment-slash text-gray-400 text-4xl mb-4"></i>
-            <p class="text-gray-600">
-              No messages yet. When someone requests to borrow your tools,
-              you'll see their messages here.
+            <i class="fas fa-scroll text-royal text-4xl mb-4"></i>
+            <p class="text-abyss font-mechanical">
+              Your pneumatic message tube is empty! When inventors request to
+              borrow your contraptions, messages will appear here.
             </p>
           </div>
           <div v-else>
-            <div class="divide-y divide-gray-200">
+            <div class="divide-y divide-royal divide-opacity-20">
               <message-preview
                 v-for="message in messages"
                 :key="message.id"
@@ -228,9 +246,9 @@
       <!-- Toast Notification -->
       <div
         v-if="showToast"
-        class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center z-50"
+        class="steampunk-toast fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center"
       >
-        <i class="fas fa-check-circle mr-2"></i>
+        <i class="fas fa-cog fa-spin mr-2"></i>
         <span>{{ toastMessage }}</span>
       </div>
     </div>
