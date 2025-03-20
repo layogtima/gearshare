@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Steampunk Tailwind Showcase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              steam: {
+                dark: "#7D0A0A",
+                primary: "#BF3131",
+                accent: "#EAD196",
+                light: "#EEEEEE",
+              },
+            },
+            fontFamily: {
+              steam: ["Georgia", "serif"],
+            },
+            animation: {
+              "spin-slow": "spin 3s linear infinite",
+              "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwind">
+      @layer utilities {
+        .text-shadow {
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .border-double-steam {
+          border: 4px double theme("colors.steam.accent");
+        }
+      }
+    </style>
+    <style>
+      /* Just a tiny bit of real CSS for some steampunk flair */
+      @import url("https://fonts.googleapis.com/css2?family=Pirata+One&display=swap");
+
+      .steampunk-heading {
+        font-family: "Pirata One", cursive;
+      }
+
+      .gear {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23EAD196' width='24px' height='24px'%3E%3Cpath d='M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z'/%3E%3C/svg%3E");
+        background-repeat: repeat;
+        background-size: 100px;
+        opacity: 0.1;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-steam-light dark:bg-steam-dark min-h-screen transition-colors duration-300"
+  >
+    <!-- Dark Mode Toggle -->
+    <div class="fixed top-4 right-4 z-50">
+      <button
+        id="darkModeToggle"
+        class="p-2 bg-steam-accent dark:bg-steam-primary rounded-full shadow-lg transition-all duration-300 hover:rotate-12"
+      >
+        <!-- Sun Icon (Visible in dark mode) -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-steam-dark hidden dark:block"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+          />
+        </svg>
+        <!-- Moon Icon (Visible in light mode) -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-steam-primary dark:hidden"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Header/Navigation Bar - Component #1 -->
+    <header
+      class="bg-steam-primary dark:bg-steam-dark border-b-2 border-steam-accent sticky top-0 z-40 shadow-lg transition-colors duration-300"
+    >
+      <div class="container mx-auto px-4 py-3">
+        <nav class="flex flex-wrap items-center justify-between">
+          <!-- Logo -->
+          <div class="flex items-center">
+            <div
+              class="h-10 w-10 bg-steam-accent rounded-full flex items-center justify-center animate-spin-slow mr-3"
+            >
+              <div
+                class="h-8 w-8 bg-steam-primary dark:bg-steam-dark rounded-full flex items-center justify-center"
+              >
+                <div class="h-4 w-4 bg-steam-accent rounded-full"></div>
+              </div>
+            </div>
+            <h1 class="steampunk-heading text-2xl font-bold text-steam-light">
+              Steampunk Interface
+            </h1>
+          </div>
+
+          <!-- Hamburger Menu for Mobile -->
+          <div class="block lg:hidden">
+            <button
+              id="menuToggle"
+              class="flex items-center px-3 py-2 border rounded border-steam-accent text-steam-accent hover:text-steam-light hover:border-steam-light transition-colors duration-200"
+            >
+              <svg
+                class="fill-current h-3 w-3"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <title>Menu</title>
+                <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Navigation Links -->
+          <div
+            id="navMenu"
+            class="hidden w-full lg:flex lg:w-auto lg:items-center transition-all duration-300 ease-in-out"
+          >
+            <div class="text-sm lg:flex-grow mt-4 lg:mt-0">
+              <a
+                href="#"
+                class="block mt-2 lg:inline-block lg:mt-0 text-steam-accent hover:text-steam-light mr-4 border-b-2 border-transparent hover:border-steam-accent transition-all duration-200"
+                >Dashboard</a
+              >
+              <a
+                href="#"
+                class="block mt-2 lg:inline-block lg:mt-0 text-steam-accent hover:text-steam-light mr-4 border-b-2 border-transparent hover:border-steam-accent transition-all duration-200"
+                >Components</a
+              >
+              <a
+                href="#"
+                class="block mt-2 lg:inline-block lg:mt-0 text-steam-accent hover:text-steam-light mr-4 border-b-2 border-transparent hover:border-steam-accent transition-all duration-200"
+                >Documentation</a
+              >
+              <a
+                href="#"
+                class="block mt-2 lg:inline-block lg:mt-0 text-steam-accent hover:text-steam-light border-b-2 border-transparent hover:border-steam-accent transition-all duration-200"
+                >About</a
+              >
+            </div>
+            <div class="mt-4 lg:mt-0">
+              <a
+                href="#"
+                class="inline-block text-sm px-4 py-2 leading-none border rounded border-steam-accent text-steam-accent hover:border-transparent hover:text-steam-dark hover:bg-steam-accent transition-colors duration-200"
+                >Login</a
+              >
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 relative">
+      <!-- Background Decoration -->
+      <div class="fixed inset-0 gear opacity-10 pointer-events-none"></div>
+
+      <!-- Hero Section - Component #2 -->
+      <section
+        class="relative overflow-hidden mb-16 border-2 border-steam-primary dark:border-steam-accent rounded-lg bg-gradient-to-br from-steam-light to-steam-accent/20 dark:from-steam-dark dark:to-steam-primary/40 transition-colors duration-300"
+      >
+        <div
+          class="absolute -right-10 -top-10 h-40 w-40 bg-steam-primary/20 dark:bg-steam-accent/20 rounded-full blur-xl animate-pulse-slow"
+        ></div>
+        <div
+          class="absolute -left-10 -bottom-10 h-40 w-40 bg-steam-primary/20 dark:bg-steam-accent/20 rounded-full blur-xl"
+        ></div>
+
+        <div class="container mx-auto px-4 py-16 relative z-10">
+          <div class="md:flex md:items-center md:justify-between">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+              <h2
+                class="steampunk-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-steam-dark dark:text-steam-light"
+              >
+                The Extraordinary Tailwind Contraption
+              </h2>
+              <p
+                class="text-lg mb-8 text-steam-dark/80 dark:text-steam-light/80"
+              >
+                Behold a marvelous invention of utility classes, where we
+                sacrifice semantic meaning for the almighty convenience of not
+                having to write proper CSS. Impressive efficiency or
+                abomination? You decide.
+              </p>
+              <div class="flex space-x-4">
+                <button
+                  class="px-8 py-3 bg-steam-primary text-steam-light rounded-md hover:bg-steam-dark transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 active:translate-y-0"
+                >
+                  Explore Components
+                </button>
+                <button
+                  class="px-8 py-3 border-2 border-steam-primary bg-transparent text-steam-primary dark:text-steam-accent dark:border-steam-accent rounded-md hover:bg-steam-primary/10 dark:hover:bg-steam-accent/10 transition-colors duration-300"
+                >
+                  Documentation
+                </button>
+              </div>
+            </div>
+            <div class="md:w-2/5">
+              <div
+                class="p-1 bg-steam-primary/30 dark:bg-steam-accent/30 rounded-lg backdrop-blur-sm"
+              >
+                <div
+                  class="border-double-steam p-6 bg-steam-light/80 dark:bg-steam-dark/80 rounded-lg shadow-lg relative overflow-hidden"
+                >
+                  <div class="absolute top-3 left-3 flex space-x-2">
+                    <div class="h-3 w-3 bg-steam-primary rounded-full"></div>
+                    <div class="h-3 w-3 bg-steam-accent rounded-full"></div>
+                    <div
+                      class="h-3 w-3 bg-steam-light dark:bg-steam-dark rounded-full border border-steam-primary"
+                    ></div>
+                  </div>
+                  <div class="mt-6">
+                    <div
+                      class="h-4 w-3/4 bg-steam-primary/20 dark:bg-steam-accent/20 rounded mb-2"
+                    ></div>
+                    <div
+                      class="h-4 w-5/6 bg-steam-primary/20 dark:bg-steam-accent/20 rounded mb-2"
+                    ></div>
+                    <div
+                      class="h-4 w-4/6 bg-steam-primary/20 dark:bg-steam-accent/20 rounded mb-2"
+                    ></div>
+                    <div
+                      class="h-4 w-5/6 bg-steam-primary/20 dark:bg-steam-accent/20 rounded mb-4"
+                    ></div>
+                    <div
+                      class="h-10 w-full bg-steam-primary/20 dark:bg-steam-accent/20 rounded mb-2"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Table of Contents - Component #3 -->
+      <section
+        class="mb-16 border-2 border-steam-primary dark:border-steam-accent p-6 rounded-lg bg-steam-light/60 dark:bg-steam-dark/60 backdrop-blur-sm transition-colors duration-300"
+      >
+        <h2
+          class="steampunk-heading text-3xl font-bold mb-6 text-steam-dark dark:text-steam-light"
+        >
+          Component Index
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <a
+            href="#cards"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              1. Cards
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Content containers for organizing information
+            </p>
+          </a>
+          <a
+            href="#buttons"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              2. Buttons
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Interactive elements for user actions
+            </p>
+          </a>
+          <a
+            href="#forms"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              3. Forms
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Input controls for data collection
+            </p>
+          </a>
+          <a
+            href="#alerts"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              4. Alerts
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Notifications and message displays
+            </p>
+          </a>
+          <a
+            href="#modals"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              5. Modals
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Dialogs and popup interfaces
+            </p>
+          </a>
+          <a
+            href="#tabs"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              6. Tabs
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Organized content in tabbed interfaces
+            </p>
+          </a>
+          <a
+            href="#accordion"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              7. Accordion
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Collapsible content sections
+            </p>
+          </a>
+          <a
+            href="#badges"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              8. Badges
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Small status indicators
+            </p>
+          </a>
+          <a
+            href="#tooltips"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              9. Tooltips
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Contextual information on hover
+            </p>
+          </a>
+          <a
+            href="#pagination"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              10. Pagination
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Page navigation controls
+            </p>
+          </a>
+          <a
+            href="#tables"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              11. Tables
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Structured data presentation
+            </p>
+          </a>
+          <a
+            href="#progress"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              12. Progress
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Visual indicators of process completion
+            </p>
+          </a>
+          <a
+            href="#breadcrumbs"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              13. Breadcrumbs
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Navigation trail indicators
+            </p>
+          </a>
+          <a
+            href="#avatars"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              14. Avatars
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              User or entity representations
+            </p>
+          </a>
+          <a
+            href="#toggles"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              15. Toggles
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              On/off switches and controls
+            </p>
+          </a>
+          <a
+            href="#dropdowns"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              16. Dropdowns
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Expandable selection menus
+            </p>
+          </a>
+          <a
+            href="#carousel"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              17. Carousel
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Rotating content sliders
+            </p>
+          </a>
+          <a
+            href="#footer"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              18. Footer
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Site footer layouts
+            </p>
+          </a>
+          <a
+            href="#wizard"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              19. Wizard
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Multi-step form processes
+            </p>
+          </a>
+          <a
+            href="#darkmode"
+            class="p-4 border border-steam-primary/30 dark:border-steam-accent/30 rounded-md hover:bg-steam-accent/10 transition-colors duration-200 group"
+          >
+            <h3
+              class="font-bold text-steam-primary dark:text-steam-accent group-hover:text-steam-dark dark:group-hover:text-steam-light transition-colors duration-200"
+            >
+              20. Dark Mode
+            </h3>
+            <p class="text-sm text-steam-dark/70 dark:text-steam-light/70">
+              Theme switching functionality
+            </p>
+          </a>
+        </div>
+      </section>
+
+      <!-- Cards Section - Component #4 -->
+      <section id="cards" class="mb-16">
+        <div
+          class="border-2 border-steam-primary dark:border-steam-accent p-6 rounded-lg bg-steam-light/60 dark:bg-steam-dark/60 backdrop-blur-sm transition-colors duration-300 mb-6"
+        >
+          <h2
+            class="steampunk-heading text-3xl font-bold mb-6 text-steam-dark dark:text-steam-light"
+          >
+            1. Cards
+          </h2>
+          <p class="mb-6 text-steam-dark/80 dark:text-steam-light/80">
+            Cards are versatile containers to organize and present content in a
+            clear and concise manner. Behold these marvelous content vessels,
+            crafted with the finest utility classes Tailwind has to offer.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Basic Card -->
+            <div
+              class="border-2 border-steam-primary dark:border-steam-accent rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 bg-steam-light dark:bg-steam-dark"
+            >
+              <div
+                class="h-40 bg-steam-primary/20 dark:bg-steam-primary/40 flex items-center justify-center"
+              >
+                <span class="text-4xl text-steam-primary dark:text-steam-accent"
+                  >🔧</span
+                >
+              </div>
+              <div class="p-6">
+                <h3
+                  class="font-bold text-xl mb-2 text-steam-primary dark:text-steam-accent"
+                >
+                  Basic Card
+                </h3>
+                <p class="text-steam-dark/70 dark:text-steam-light/70 mb-4">
+                  The simplest form of a card, containing only the essential
+                  elements needed to present information clearly.
+                </p>
+                <button
+                  class="text-sm text-steam-primary dark:text-steam-accent hover:text-steam-dark dark:hover:text-steam-light transition-colors duration-200"
+                >
+                  Learn More →
+                </button>
+              </div>
+            </div>
+
+            <!-- Product Card -->
+            <div
+              class="border-2 border-steam-primary dark:border-steam-accent rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 bg-steam-light dark:bg-steam-dark"
+            >
+              <div class="relative">
+                <div
+                  class="h-40 bg-steam-primary/20 dark:bg-steam-primary/40 flex items-center justify-center"
+                >
+                  <span
+                    class="text-4xl text-steam-primary dark:text-steam-accent"
+                    >⚙️</span
+                  >
+                </div>
+                <span
+                  class="absolute top-2 right-2 bg-steam-accent text-steam-dark text-xs font-bold px-3 py-1 rounded"
+                  >NEW</span
+                >
+              </div>
+              <div class="p-6">
+                <div class="flex justify-between items-start mb-2">
+                  <h3
+                    class="font-bold text-xl text-steam-primary dark:text-steam-accent"
+                  >
+                    Product Card
+                  </h3>
+                  <span
+                    class="font-bold text-steam-primary dark:text-steam-accent"
+                    >$129</span
+                  >
+                </div>
+                <p class="text-steam-dark/70 dark:text-steam-light/70 mb-4">
+                  Featuring a product with its image, description, and pricing
+                  information.
+                </p>
+                <button
+                  class="w-full py-2 bg-steam-primary text-steam-light rounded-md hover:bg-steam-dark transition-colors duration-300"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+
+            <!-- Feature Card -->
+            <div class="border-2 border-steam-primary dark:border-steam-accent rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 bg-steam-light dark:bg-steam-dark">
+                <div class="h-40 bg-steam-primary/20 dark:bg-steam-primary/40 flex items-center justify-center border-b border-steam-primary/30 dark:border-steam-accent/30">
+                    <span class="text-4xl text-steam-primary dark:text-steam-accent">🔩</span>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="h-10 w-10 rounded-full bg-steam-primary/20 dark:bg-steam-accent/20 flex items-center justify-center mr-3">
+                            <span class="text-sm text-steam-primary dark:text-steam-accent">FT</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl text-steam-primary dark:text-steam-accent">Feature Card</h3>
+                            <p class="text-xs text-steam-dark/60 dark:text-steam-light/60">Highlighting product features</p>
+                        </div>
+                    </div>
+                    <p class="text-steam-dark/70 dark:text-steam-light/70 mb-4">Perfect for showcasing specific features or benefits of your product or service.</p>
+                    <div class="flex justify-between items-center">
+                        <button class="px-4 py-2 bg-steam-primary text-steam-light rounded-md hover:bg-steam-dark transition-colors duration-300">Details</button>
+                        <span class="text-sm text-steam-dark/60 dark:text-steam-light/60">Updated 2 days ago</span>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Buttons Section - Component #5 -->
+            <section id="buttons" class="mb-16">
+                <div class="border-2 border-steam-primary dark:border-steam-accent p-6 rounded-lg bg-steam-light/60 dark:bg-steam-dark/60 backdrop-blur-sm transition-colors duration-300 mb-6">
+                    <h2 class="steampunk-heading text-3xl font-bold mb-6 text-steam-dark dark:text-steam-light">2. Buttons</h2>
+                    <p class="mb-6 text-steam-dark/80 dark:text-steam-light/80">Behold these interactive contraptions that trigger actions upon being pressed. Each styled with an excessive string of utility classes that would make any CSS purist weep.</p>
+                
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Basic Buttons -->
+                        <div class="p-6 border border-steam-primary/30 dark:border-steam-accent/30 rounded-lg">
+                            <h3 class="font-bold text-xl mb-4 text-steam-primary dark:text-steam-accent">Basic Buttons</h3>
+                            <div class="flex flex-wrap gap-4">
+                                <button class="px-4 py-2 bg-steam-primary text-steam-light rounded-md hover:bg-steam-dark transition-colors duration-300">Primary</button>
+                                <button class="px-4 py-2 bg-steam-accent text-steam-dark rounded-md hover:brightness-90 transition-all duration-300">Secondary</button>
+                                <button class="px-4 py-2 bg-transparent border-2 border-steam-primary text-steam-primary dark:text-steam-accent dark:border-steam-accent rounded-md hover:bg-steam-primary/10 dark:hover:bg-steam-accent/10 transition-colors duration-300">Outline</button>
+                                <button class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors duration-300 opacity-50 cursor-not-allowed">Disabled</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Button Sizes -->
+                        <div class="p-6 border border-steam-primary/30 dark:border-steam-accent/30 rounded-lg">
+                            <h3 class="font-bold text-xl mb-4 text-steam-primary dark:text-steam-accent">Button Sizes</h3>
+                            <div class="flex flex-wrap items-center gap-4">
+                                <button class="px-2 py-1 text-xs bg-steam-primary text-steam-light rounded-md hover:bg-steam-dark transition-colors duration-300">Small</button>
+                                <button class="px-4 py-2 text-sm bg-steam-primary text-steam-light rounded-md hover:bg-steam-dark transition-colors duration-300">Medium</button>
+                                <button class="px-6 py-3 bg-steam-primary text-steam-light rounded-md hover:bg-steam-dark transition-colors duration-300">Large</button>
+                                <button class="px-8 py-4 text-lg bg-steam-primary text-steam-light rounded-md hover:bg-steam-dark transition-colors duration-300">Extra Large</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Icon Buttons -->
+                        <div class="p-6 border border-steam-primary/30 dark:border-steam-accent/30 rounded-lg">
+                            <h3 class="font-bold text-xl mb-4 text-steam-primary dark:text-steam-accent">Icon Buttons</h3>
+                            <div class="flex flex-wrap gap-4">
+                                <!-- Search Icon -->
+                                <button class="p-2 bg-steam-primary text-steam-light rounded-full hover:bg-steam-dark transition-colors duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </button>
+                                <!-- Heart Icon -->
+                                <button class="p-2 bg-steam-primary text-steam-light rounded-full hover:bg-steam-dark transition-colors duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                </button>
+                                <!-- Settings Icon -->
+                                <button class="p-2 bg-steam-primary text-steam-light rounded-full hover:bg-steam-dark transition-colors duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </button>
+                                <!-- Text with Icon -->
+                                <button class="px-4 py-2 bg-steam-primary text-steam-light rounded-md hover:bg-steam-dark transition-colors duration-300 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                    <span>Add Item</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Button Groups -->
+                        <div class="p-6 border border-steam-primary/30 dark:border-steam-accent/30 rounded-lg">
+                            <h3 class="font-bold text-xl mb-4 text-steam-primary dark:text-steam-accent">Button Groups</h3>
+                            <div class="inline-flex rounded-md shadow-sm mb-4" role="group">
+                                <button class="px-4 py-2 text-sm font-medium bg-steam-primary text-steam-light rounded-l-lg border border-steam-primary hover:bg-steam-dark transition-colors duration-300">Week</button>
+                                <button class="px-4 py-2 text-sm font-medium bg-steam-primary text-steam-light border-t border-b border-steam-primary hover:bg-steam-dark transition-colors duration-300">Month</button>
+                                <button class="px-4 py-2 text-sm font-medium bg-steam-primary text-steam-light rounded-r-lg border border-steam-primary hover:bg-steam-dark transition-colors duration-300">Year</button>
+                            </div>
+                            <div class="inline-flex rounded-md shadow-sm" role="group">
+                                <button class="p-2 bg-steam-primary text-steam-light rounded-l-lg border border-steam-primary hover:bg-steam-dark transition-colors duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+                                    </svg>
+                                </button>
+                                <button class="p-2 bg-steam-primary text-steam-light border-t border-b border-steam-primary hover:bg-steam-dark transition-colors duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                                    </svg>
+                                </button>
+                                <button class="p-2 bg-steam-primary text-steam-light rounded-r-lg border border-steam-primary hover:bg-steam-dark transition-colors duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <!-- Forms Section - Component #6 (Complex Forms as requested) -->
+            <section id="forms" class="mb-16">
+                <div class="border-2 border-steam-primary dark:border-steam-accent p-6 rounded-lg bg-steam-light/60 dark:bg-steam-dark/60 backdrop-blur-sm transition-colors duration-300 mb-6">
+                    <h2 class="steampunk-heading text-3xl font-bold mb-6 text-steam-dark dark:text-steam-light">3. Forms</h2>
+                    <p class="mb-6 text-steam-dark/80 dark:text-steam-light/80">Behold these intricate contraptions of data collection! Observe how the once simple form element has been transmuted into a labyrinth of utility classes. CSS purists, avert your eyes!</p>
+                
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Complex Registration Form -->
+                        <div class="p-6 border border-steam-primary/30 dark:border-steam-accent/30 rounded-lg">
+                            <h3 class="font-bold text-xl mb-4 text-steam-primary dark:text-steam-accent">Registration Form</h3>
+                            <form>
+                                <div class="mb-4">
+                                    <div class="flex mb-2">
+                                        <label for="fullName" class="block text-sm font-medium text-steam-dark dark:text-steam-light">Full Name</label>
+                                        <span class="ml-1 text-steam-primary dark:text-steam-accent">*</span>
+                                    </div>
+                                    <input type="text" id="fullName" name="fullName" class="w-full px-3 py-2 bg-steam-light dark:bg-steam-dark border-2 border-steam-primary/50 dark:border-steam-accent/50 rounded-md focus:outline-none focus:ring-2 focus:ring-steam-primary dark:focus:ring-steam-accent focus:border-transparent transition-all duration-300" placeholder="Enter your full name" required>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <div class="flex mb-2">
+                                            <label for="email" class="block text-sm font-medium text-steam-dark dark:text-steam-light">Email Address</label>
+                                            <span class="ml-1 text-steam-primary dark:text-steam-accent">*</span>
+                                        </div>
+                                        <input type="email" id="email" name="email" class="w-full px-3 py-2 bg-steam-light dark:bg-steam-dark border-2 border-steam-primary/50 dark:border-steam-accent/50 rounded-md focus:outline-none focus:ring-2 focus:ring-steam-primary dark:focus:ring-steam-accent focus:border-transparent transition-all duration-300" placeholder="your.email@example.com" required>
+                                    </div>
+                                    <div>
+                                        <div class="flex mb-2">
+                                            <label for="phone" class="block text-sm font-medium text-steam-dark dark:text-steam-light">Phone Number</label>
+                                        </div>
+                                        <input type="tel" id="phone" name="phone" class="w-full px-3 py-2 bg-steam-light dark:bg-steam-dark border-2 border-steam-primary/50 dark:border-steam-accent/50 rounded-md focus:outline-none focus:ring-2 focus:ring-steam-primary dark:focus:ring-steam-accent focus:border-transparent transition-all duration-300" placeholder="(555) 123-4567">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="flex mb-2">
+                                        <label for="password" class="block text-sm font-medium text-steam-dark dark:text-steam-light">Password</label>
+                                        <span class="ml-1 text-steam-primary dark:text-steam-accent">*</span>
+                                    </div>
+                                    <input type="password" id="password" name="password" class="w-full px-3 py-2 bg-steam-light dark:bg-steam-dark border-2 border-steam-primary/50 dark:border-steam-accent/50 rounded-md focus:outline-none focus:ring-2 focus:ring-steam-primary dark:focus:ring-steam-accent focus:border-transparent transition-all duration-300" placeholder="Enter your password" required>
+                                    <p class="mt-1 text-xs text-steam-dark/60 dark:text-steam-light/60">Password must be at least 8 characters with 1 uppercase letter, 1 number, and 1 special character.</p>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="flex mb-2">
+                                        <label for="confirmPassword" class="block text-sm font-medium text-steam-dark dark:text-steam-light">Confirm Password</label>
+                                        <span class="ml-1 text-steam-primary dark:text-steam-accent">*</span>
+                                    </div>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" class="w-full px-3 py-2 bg-steam-light dark:bg-steam-dark border-2 border-steam-primary/50 dark:border-steam-accent/50 rounded-md focus:outline-none focus:ring-2 focus:ring-steam-primary dark:focus:ring-steam-accent focus:border-transparent transition-all duration-300" placeholder="Confirm your password" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="flex mb-2">
+                                        <label for="country" class="block text-sm font-medium text-steam-dark dark:text-steam-light">Country</label>
+                                        <span class="ml-1 text-steam-primary dark:text-steam-accent">*</span>
+                                    </div>
+                                    <select id="country" name="country" class="w-full px-3 py-2 bg-steam-light dark:bg-steam-dark border-2 border-steam-primary/50 dark:border-steam-accent/50 rounded-md focus:outline-none focus:ring-2 focus:ring-steam-primary dark:focus:ring-steam-accent focus:border-transparent transition-all duration-300" required>
+                                        <option value="" disabled selected>Select your country</option>
+                                        <option value="us">United States</option>
+                                        <option value="ca">Canada</option>
+                                        <option value="uk">United Kingdom</option>
+                                        <option value="au">Australia</option>
+                                        <option value="in">India</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="form-checkbox h-5 w-5 text-steam-primary dark:text-steam-accent rounded border-2 border-steam-primary/50 dark:border-steam-accent/50 focus:ring-steam-primary dark:focus:ring-steam-accent">
+                                        <span class="ml-2 text-sm text-steam-dark dark:text-steam-light">I agree to the <a href="#" class="text-steam-primary dark:text-steam-accent hover:underline">Terms of Service</a> and <a href="#" class="text-steam-primary dark:text-steam-accent hover:underline">Privacy Policy</a></span>
+                                    </label>
+                                </div>
+                                
+                                <button type="submit" class="w-full py-2 bg-steam-primary text-steam-light rounded-md hover:bg-steam-dark transition-colors duration-300">Create Account</button>
+                            </form>
+                        </div>
+                        
+                        <!-- Complex Contact Form with File Upload -->
+                        <div class="p-6 border border-steam-primary/30 dark:border-steam-accent/30 rounded-lg">
+                            <h3 class="font-bold text-xl mb-4 text-steam-primary dark:text-steam-accent">Contact Form</h3>
+                            <form>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <div class="flex mb-2">
+                                            <label for="firstName" class="block text-sm font-medium text-steam-dark dark:text-steam-light">First Name</label>
+                                            <span class="ml-1 text-steam-primary dark:text-steam-accent">*</span>
+                                        </div>
+                                        <input type="text" id="firstName" name="firstName" class="w-full px-3 py-2 bg-steam-light dark:bg-steam-dark border-2 border-steam-primary/50 dark:border-steam-accent/50 rounded-md focus:outline-none focus:ring-2 focus:ring-steam-primary dark:focus:ring-steam-accent focus:border-transparent transition-all duration-300" placeholder="John" required>
+                                    </div>
+                                    <div>
+                                        <div class="flex mb-2">
+                                            <label for="lastName" class="block text-sm font-medium text-steam-dark dark:text-steam-light">Last Name</label>
+                                            <span class="ml-1 text-steam-primary dark:text-steam-accent">*</span>
+                                        </div>
+                                        <input type="text" id="lastName" name="lastName" class="w-full px-3 py-2 bg-steam-light dark:bg-steam-dark border-2 border-steam-primary/50 dark:border-steam-accent/50 rounded-md focus:outline-none focus:ring-2 focus:ring-steam-primary dark:focus:ring-steam-accent focus:border-transparent transition-all duration-300" placeholder="Doe" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="flex mb-2">
+                                        <label for="contactEmail" class="block text-sm font-medium text-steam-dark dark:text-steam-light">Email Address</label>
+                                        <span class="ml-1 text-steam-primary dark:text-steam-accent">*</span>
+                                    </div>
+                                    <input type="email" id="contactEmail" name="contactEmail" class="w-full px-3 py-2 bg-steam-light dark:bg-steam-dark border-2 border-steam-primary/50 dark:border-steam-accent/50 rounded-md focus:outline-none focus:ring-2 focus:ring-steam-primary dark:focus:ring-steam-accent focus:border-transparent transition-all duration-300" placeholder="your.email@example.com" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="flex mb-2">
+                                        <label for="subject" class="block text-sm font-medium text-steam-dark dark:text-steam-light">Subject</label>
+                                        <span class="ml-1 text-steam-primary dark:text-steam-accent">*</span>
+                                    </div>
+                                    <select id="subject" name="subject" class="w-full px-3 py-2 bg-steam-light dark:bg-steam-dark border-2 border-steam-primary/50 dark:border-steam-accent/50 rounded-md focus:outline-none focus:ring-2 focus:ring-steam-primary dark:focus:ring-steam-accent focus:border-transparent transition-all duration-300" required>
+                                        <option value="" disabled selected>Select a subject</option>
+                                        <option value="support">Technical Support</option>
+                                        <option value="sales">Sales Inquiry</option>
+                                        <option value="billing">Billing Question</option>
+                                        <option value="partnership">Partnership Opportunity</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="flex mb-2">
+                                        <label for="message" class="block text-sm font-medium text-steam-dark dark:text-steam-light">Message</label>
+                                        <span class="ml-1 text-steam-primary dark:text-steam-accent">*</span>
+                                    </div>
+                                    <textarea id="message" name="message" rows="4" class="w-full px-3 py-2 bg-steam-light dark:bg-steam-dark border-2 border-steam-primary/50 dark:border-steam-accent/50 rounded-md focus:outline-none focus:ring-2 focus:ring-steam-primary dark:focus:ring-steam-accent focus:border-transparent transition-all duration-300" placeholder="Enter your message here..." required></textarea>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="flex mb-2">
+                                        <label for="attachments" class="block text-sm font-medium text-steam-dark dark:text-steam-light">Attachments (optional)</label>
+                                    </div>
+                                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-steam-primary/30 dark:border-steam-accent/30 rounded-md">
+                                        <div class="space-y-1 text-center">
+                                            <svg class="mx-auto h-12 w-12 text-steam-primary dark:text-steam-accent" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                            <div class="flex text-sm text-steam-dark dark:text-steam-light">
+                                                <label for="file-upload" class="relative cursor-pointer bg-steam-light dark:bg-steam-dark rounded-md font-medium text-steam-primary dark:text-steam-accent hover:text-steam-dark dark:hover:text-steam-light focus-within:outline-none">
+                                                    <span>Upload a file</span>
+                                                    <input id="file-upload" name="file-upload" type="file" class="sr-only">
+                                                </label>
+                                                <p class="pl-1">or drag and drop</p>
+                                            </div>
+                                            <p class="text-xs text-steam-dark/60 dark:text-steam-light/60">PNG, JPG, GIF up to 10MB</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="form-checkbox h-5 w-5 text-steam-primary dark:text-steam-accent rounded border-2 border-steam-primary/50 dark:border-steam-accent/50 focus:ring-steam-primary dark:focus:ring-steam-accent">
+                                        <span class="ml-2 text-sm text-steam-dark dark:text-steam-light">Send me a copy of this message</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <button type="reset" class="px-4 py-2 bg-transparent border-2 border-steam-primary text-steam-primary dark:text-steam-accent dark:border-steam-accent rounded-md hover:bg-steam-primary/10 dark:hover:bg-steam-accent/10 transition-colors duration-300">Reset</button>
+                                    <button type="submit" class="px-4 py-2 bg-steam-primary text-steam-light rounded-md hover:bg-steam-dark transition-colors duration-300">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
