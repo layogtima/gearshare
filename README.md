@@ -177,4 +177,4 @@ Distributed under the GNU General Public License v3. See `LICENSE` for more info
 
 ---
 
-*GearShare: Because you don't need to own every damn tool in the hardware store.*
+*Gearshare: Because you don't need to own every damn tool in the hardware store.*
