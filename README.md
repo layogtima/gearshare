@@ -4,7 +4,7 @@
 
 A hyperlocal tool-sharing platform that builds community resilience while giving the middle finger to the "buy more stuff" economy. Connect with neighbors, share resources, and stick it to Big Hardware, one borrowed tool at a time.
 
-![WIP Interface]([/api/placeholder/800/400](https://github.com/user-attachments/assets/a0a8815d-7acc-4a22-bceb-0eed3bd09422))
+![WIP Interface](https://github.com/user-attachments/assets/a0a8815d-7acc-4a22-bceb-0eed3bd09422)
 
 
 ## Core Philosophy
