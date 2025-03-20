@@ -4,7 +4,11 @@
 
 A hyperlocal tool-sharing platform that fosters community hacking and helps you connect with fellow DIYers, share resources, one borrowed tool at a time.
 
-![WIP Interface](https://github.com/user-attachments/assets/a0a8815d-7acc-4a22-bceb-0eed3bd09422)
+![WIP Interface](https://github.com/user-attachments/assets/91607271-7102-44e4-91ba-012e3709cd4d)
+
+
+Uploading Screen Recording 2025-03-21 at 2.56.47 AM.mp4…
+
 
 
 ## Core Philosophy
