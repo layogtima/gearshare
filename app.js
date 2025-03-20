@@ -5,7 +5,8 @@ import {
     messagePreview,
     addItemModal,
     borrowRequestModal,
-    messageDetailModal
+    messageDetailModal,
+    toolDetailModal
 } from './components.js';
 
 // Import data layer from hydrate.js
@@ -33,7 +34,8 @@ createApp({
         'message-preview': messagePreview,
         'add-item-modal': addItemModal,
         'borrow-request-modal': borrowRequestModal,
-        'message-detail-modal': messageDetailModal
+        'message-detail-modal': messageDetailModal,
+        'tool-detail-modal': toolDetailModal,
     },
 
     setup() {
@@ -52,6 +54,9 @@ createApp({
         const showToast = ref(false);
         const toastMessage = ref('');
         const loading = ref(false);
+        const showToolDetailModal = ref(false);
+        const selectedToolDetail = ref(null);
+
 
         // User data
         const unreadMessages = ref(0);
@@ -133,6 +138,15 @@ createApp({
         // ==================
 
         // UI Management
+
+        const openToolDetailModal = (item) => {
+            selectedToolDetail.value = item;
+            showToolDetailModal.value = true;
+        };
+
+        const closeToolDetailModal = () => {
+            showToolDetailModal.value = false;
+        };
 
         // Toggle the new item modal visibility
         const toggleNewItemModal = () => {
@@ -417,6 +431,34 @@ createApp({
                 localStorage.setItem('gearShareFirstVisit', 'false');
             }
         });
+
+        const setupGearModalInteractions = () => {
+            // State for the detail modal
+            const showToolDetailModal = ref(false);
+            const selectedToolDetail = ref(null);
+
+            // Methods for the detail modal
+            const openToolDetailModal = (item) => {
+                selectedToolDetail.value = item;
+                showToolDetailModal.value = true;
+                // Optional: could fetch additional details here
+            };
+
+            const closeToolDetailModal = () => {
+                showToolDetailModal.value = false;
+                // Wait for animation to complete before nulling the selected item
+                setTimeout(() => {
+                    selectedToolDetail.value = null;
+                }, 300);
+            };
+
+            return {
+                showToolDetailModal,
+                selectedToolDetail,
+                openToolDetailModal,
+                closeToolDetailModal
+            };
+        };
 
         // ==================
         // Return All Reactive Data and Methods

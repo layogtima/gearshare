@@ -9,59 +9,158 @@ const toolCard = {
     }
   },
   template: `
-    <div class="overflow-hidden shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group">
-      <div class="md:flex">
-        <div class="md:flex-shrink-0 relative">
-          <img class="h-48 w-full object-cover md:w-48 rounded-tl-lg md:rounded-bl-lg md:rounded-tr-none rounded-tr-lg" 
-               :src="item.image" 
-               :alt="item.name">
-          <div class="absolute top-2 right-2">
-            <span :class="['px-2 py-1 text-xs rounded-full border-2 border-cream font-mechanical font-bold', 
-              item.condition === 'Excellent' ? 'bg-royal text-cream' : 
-              item.condition === 'Good' ? 'bg-midnight text-cream' : 
-              'bg-abyss text-cream']">
-              {{ item.condition }}
-            </span>
-          </div>
+    <div @click="$emit('view-details', item)" 
+         class="relative group overflow-hidden rounded-xl border-3 border-royal shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+      <!-- Main image takes center stage -->
+      <div class="aspect-square overflow-hidden relative">
+        <img :src="item.image" 
+             :alt="item.name" 
+             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+        
+        <!-- Condition badge -->
+        <div class="absolute top-3 right-3">
+          <span :class="['px-2 py-1 text-xs rounded-full border-2 border-cream font-mechanical font-bold', 
+            item.condition === 'Excellent' ? 'bg-royal text-cream' : 
+            item.condition === 'Good' ? 'bg-midnight text-cream' : 
+            'bg-abyss text-cream']">
+            {{ item.condition }}
+          </span>
         </div>
-        <div class="p-4 flex-1">
-          <div class="flex justify-between items-start">
-            <div>
-              <h3 class="text-xl font-ornate text-royal tracking-wide">{{ item.name }}</h3>
-              <p class="text-sm font-mechanical text-abyss mt-1 flex flex-wrap items-center">
-                <span class="flex items-center mr-3">
-                  <i class="fas fa-map-marker-alt text-royal mr-1"></i> {{ item.distance }} km away
-                </span>
-                <span class="flex items-center">
-                  <i class="far fa-clock text-royal mr-1"></i> {{ item.availabilityText }}
-                </span>
-              </p>
-            </div>
-          </div>
-          
-          <p class="mt-3 text-abyss text-sm leading-relaxed">{{ item.description }}</p>
-          
-          <div class="mt-4 flex items-center">
-            <div class="flex items-center">
-              <img class="h-8 w-8 rounded-full border-2 border-royal" :src="item.ownerAvatar" :alt="item.ownerName">
-              <span class="ml-2 text-sm font-mechanical text-abyss">{{ item.ownerName }}</span>
-            </div>
-            <div class="ml-auto flex items-center">
-              <span class="text-royal mr-1">★</span>
-              <span class="text-sm text-abyss">{{ item.ownerRating }}</span>
-            </div>
-          </div>
-          
-          <div class="mt-4 flex justify-end">
-            <button @click="$emit('borrow-request', item)" 
-                    class="px-4 py-2 bg-royal text-cream rounded-full border-2 border-cream font-mechanical text-sm transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0 flex items-center shadow-md group-hover:shadow-lg">
-              <i class="fas fa-handshake mr-2"></i> Request Usage
-            </button>
-          </div>
+        
+        <!-- Info overlay on hover -->
+        <div class="absolute inset-0 bg-gradient-to-t from-abyss to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+          <h3 class="text-xl font-ornate text-cream tracking-wide">{{ item.name }}</h3>
+          <p class="text-sm font-mechanical text-cream mt-1 flex items-center">
+            <span class="flex items-center mr-3">
+              <i class="fas fa-map-marker-alt mr-1"></i> {{ item.distance }} km away
+            </span>
+          </p>
+        </div>
+      </div>
+      
+      <!-- Bottom info bar, always visible -->
+      <div class="p-3 bg-cream border-t-2 border-royal border-opacity-30 flex justify-between items-center">
+        <div class="flex items-center">
+          <img class="h-8 w-8 rounded-full border-2 border-royal" :src="item.ownerAvatar" :alt="item.ownerName">
+          <span class="ml-2 text-sm font-mechanical text-abyss">{{ item.ownerName }}</span>
+        </div>
+        <div class="flex items-center">
+          <span class="text-royal">★</span>
+          <span class="text-sm text-abyss ml-1">{{ item.ownerRating }}</span>
         </div>
       </div>
     </div>
   `
+};
+
+// Detailed tool modal component
+const toolDetailModal = {
+  props: {
+    item: {
+      type: Object,
+      required: true
+    },
+    show: {
+      type: Boolean,
+      default: false
+    }
+  },
+  template: `
+    <div v-if="show" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div class="fixed inset-0 bg-abyss bg-opacity-75 transition-opacity" aria-hidden="true" @click="$emit('close')"></div>
+
+        <!-- Modal panel -->
+        <div class="inline-block align-bottom bg-cream rounded-2xl border-3 border-royal text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full">
+          <div class="absolute top-0 right-0 pt-4 pr-4 z-10">
+            <button @click="$emit('close')" class="bg-royal rounded-full text-cream h-8 w-8 flex items-center justify-center hover:bg-midnight transition-colors focus:outline-none">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div class="sm:flex">
+            <div class="sm:w-1/2">
+              <div class="aspect-square">
+                <img :src="item.image" :alt="item.name" class="w-full h-full object-cover">
+              </div>
+            </div>
+            
+            <div class="p-6 sm:w-1/2">
+              <div class="mb-4">
+                <div class="flex justify-between items-start">
+                  <h2 class="text-2xl font-ornate text-royal">{{ item.name }}</h2>
+                  <span :class="['px-2 py-1 text-xs rounded-full border-2 border-cream font-mechanical font-bold', 
+                    item.condition === 'Excellent' ? 'bg-royal text-cream' : 
+                    item.condition === 'Good' ? 'bg-midnight text-cream' : 
+                    'bg-abyss text-cream']">
+                    {{ item.condition }}
+                  </span>
+                </div>
+                
+                <div class="mt-1 flex items-center text-sm font-mechanical text-abyss">
+                  <span class="flex items-center mr-4">
+                    <i class="fas fa-map-marker-alt text-royal mr-1"></i> {{ item.distance }} km away
+                  </span>
+                  <span class="flex items-center">
+                    <i class="far fa-clock text-royal mr-1"></i> {{ item.availabilityText }}
+                  </span>
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <h3 class="text-lg font-ornate text-royal mb-1">Description</h3>
+                <p class="text-abyss">{{ item.description }}</p>
+              </div>
+              
+              <div class="mb-6">
+                <h3 class="text-lg font-ornate text-royal mb-2">Owner</h3>
+                <div class="flex items-center">
+                  <img class="h-12 w-12 rounded-full border-2 border-royal mr-3" :src="item.ownerAvatar" :alt="item.ownerName">
+                  <div>
+                    <div class="font-mechanical text-abyss">{{ item.ownerName }}</div>
+                    <div class="flex items-center">
+                      <span class="text-royal">★</span>
+                      <span class="text-sm text-abyss ml-1">{{ item.ownerRating }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <button @click="$emit('borrow-request', item)" 
+                        class="w-full py-3 px-4 bg-royal text-cream rounded-full border-2 border-cream font-mechanical text-sm transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0 flex items-center justify-center shadow-md">
+                  <i class="fas fa-handshake mr-2"></i> Request Usage
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="p-4 border-t border-royal border-opacity-30 bg-royal bg-opacity-5">
+            <h3 class="text-lg font-ornate text-royal mb-2">Similar Contraptions Nearby</h3>
+            <div class="flex overflow-x-auto space-x-4 pb-2">
+              <!-- Dynamically generate similar items here -->
+              <div v-for="(similarItem, index) in getSimilarItems()" :key="index" 
+                   class="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden border-2 border-royal">
+                <img :src="similarItem.image" :alt="similarItem.name" class="w-full h-full object-cover">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  methods: {
+    getSimilarItems() {
+      // In a real app, this would fetch similar items based on the current item
+      // For now, we'll return a static array of 3 items
+      return [
+        { image: '/api/placeholder/100/100', name: 'Similar item 1' },
+        { image: '/api/placeholder/100/100', name: 'Similar item 2' },
+        { image: '/api/placeholder/100/100', name: 'Similar item 3' }
+      ];
+    }
+  }
 };
 
 const myToolCard = {
@@ -465,5 +564,6 @@ export {
   messagePreview,
   addItemModal,
   borrowRequestModal,
-  messageDetailModal
+  messageDetailModal,
+  toolDetailModal
 };

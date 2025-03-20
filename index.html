@@ -396,13 +396,15 @@
               </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            >
               <tool-card
                 v-for="item in filteredAvailableItems"
                 :key="item.id"
                 :item="item"
-                @borrow-request="openBorrowModal"
-                class="rounded-xl border-3 border-royal relative overflow-hidden bg-cream before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-royal before:to-abyss"
+                @view-details="openToolDetailModal"
+                class="relative overflow-hidden bg-cream"
               ></tool-card>
             </div>
 
@@ -482,6 +484,15 @@
       </main>
 
       <!-- Modals -->
+      <tool-detail-modal
+        v-if="showToolDetailModal"
+        :item="selectedToolDetail"
+        :show="showToolDetailModal"
+        @close="closeToolDetailModal"
+        @borrow-request="openBorrowModal"
+        class="modal-enter"
+      ></tool-detail-modal>
+
       <add-item-modal
         v-if="showNewItemModal"
         :new-item="newItem"
