@@ -8,9 +8,14 @@ const toolCard = {
       required: true
     }
   },
+  methods: {
+    handleClick() {
+      console.log('Card was clicked!', this.item);
+      this.$emit('view-details', this.item);
+    }
+  },
   template: `
-    <div @click="$emit('view-details', item)" 
-         class="relative group overflow-hidden rounded-xl border-3 border-royal shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+    <div @click="handleClick" class="relative group overflow-hidden rounded-xl border-3 border-royal shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
       <!-- Main image takes center stage -->
       <div class="aspect-square overflow-hidden relative">
         <img :src="item.image" 
@@ -155,9 +160,9 @@ const toolDetailModal = {
       // In a real app, this would fetch similar items based on the current item
       // For now, we'll return a static array of 3 items
       return [
-        { image: '/api/placeholder/100/100', name: 'Similar item 1' },
-        { image: '/api/placeholder/100/100', name: 'Similar item 2' },
-        { image: '/api/placeholder/100/100', name: 'Similar item 3' }
+        { image: 'https://placehold.co/400x300/261FB3/FBE4D6?text=Similar+Item+1', name: 'Similar item 1' },
+        { image: 'https://placehold.co/400x300/261FB3/FBE4D6?text=Similar+Item+2', name: 'Similar item 2' },
+        { image: 'https://placehold.co/400x300/261FB3/FBE4D6?text=Similar+Item+3', name: 'Similar item 3' }
       ];
     }
   }

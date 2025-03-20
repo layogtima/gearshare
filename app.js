@@ -6,7 +6,7 @@ import {
     addItemModal,
     borrowRequestModal,
     messageDetailModal,
-    toolDetailModal
+    toolDetailModal,
 } from './components.js';
 
 // Import data layer from hydrate.js
@@ -140,6 +140,7 @@ createApp({
         // UI Management
 
         const openToolDetailModal = (item) => {
+            console.log('MODAL OPEN ATTEMPT!', item);
             selectedToolDetail.value = item;
             showToolDetailModal.value = true;
         };
@@ -501,7 +502,11 @@ createApp({
             editItem,
             confirmDeleteItem,
             detectLocation,
-            displayToast
+            displayToast,
+            showToolDetailModal,
+            selectedToolDetail,
+            openToolDetailModal,
+            closeToolDetailModal
         };
     }
 }).mount('#app');
