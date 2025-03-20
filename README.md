@@ -2,7 +2,7 @@
 
 > *Because capitalism wants you to buy your own damn drill, we want you to share it.*
 
-A hyperlocal tool-sharing platform that builds community hacking and connect with fellow DIYers, share resources, and stick it to Big Hardware, one borrowed tool at a time.
+A hyperlocal tool-sharing platform that builds community hacking and connect with fellow DIYers, share resources, one borrowed tool at a time.
 
 ![WIP Interface](https://github.com/user-attachments/assets/a0a8815d-7acc-4a22-bceb-0eed3bd09422)
 
