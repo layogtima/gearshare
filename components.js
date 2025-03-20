@@ -58,6 +58,223 @@ const toolCard = {
   `
 };
 
+const unifiedGearModal = {
+  props: {
+    item: {
+      type: Object,
+      required: true
+    },
+    isEditMode: {
+      type: Boolean,
+      default: false
+    },
+    show: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      localItem: { ...this.item },
+      originalPrivacy: this.item.privacy || 'Public'
+    };
+  },
+  watch: {
+    item(newVal) {
+      this.localItem = { ...newVal };
+      this.originalPrivacy = newVal.privacy || 'Public';
+    }
+  },
+  methods: {
+    saveItem() {
+      this.$emit('save', this.localItem);
+    },
+    cancel() {
+      this.localItem = { ...this.item };
+      this.$emit('close');
+    },
+    togglePrivacy() {
+      const privacyLevels = ['Public', 'Friends Only', 'Private'];
+      const currentIndex = privacyLevels.indexOf(this.localItem.privacy);
+      const nextIndex = (currentIndex + 1) % privacyLevels.length;
+      this.localItem.privacy = privacyLevels[nextIndex];
+    },
+    getPrivacyIcon() {
+      if (this.localItem.privacy === 'Public') return 'fa-eye';
+      if (this.localItem.privacy === 'Friends Only') return 'fa-user-friends';
+      return 'fa-eye-slash';
+    },
+    getPrivacyClass() {
+      if (this.localItem.privacy === 'Public') return 'bg-royal text-cream';
+      if (this.localItem.privacy === 'Friends Only') return 'bg-midnight text-cream';
+      return 'bg-abyss text-cream';
+    }
+  },
+  template: `
+    <div v-if="show" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div class="fixed inset-0 bg-abyss bg-opacity-75 transition-opacity" aria-hidden="true" @click="$emit('close')"></div>
+
+        <!-- Modal panel -->
+        <div class="inline-block align-bottom bg-cream rounded-2xl border-3 border-royal text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full">
+          <div class="absolute top-0 right-0 pt-4 pr-4 z-10">
+            <button @click="$emit('close')" class="bg-royal rounded-full text-cream h-8 w-8 flex items-center justify-center hover:bg-midnight transition-colors focus:outline-none">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div class="sm:flex">
+            <!-- Left side - Image -->
+            <div class="sm:w-1/2">
+              <div v-if="localItem.image" class="aspect-square relative">
+                <img :src="localItem.image" :alt="localItem.name" class="w-full h-full object-cover">
+                
+                <!-- Privacy Badge -->
+                <div @click="togglePrivacy" class="absolute top-4 left-4 cursor-pointer">
+                  <span :class="['px-2 py-1 text-xs rounded-full border-2 border-cream font-mechanical font-bold flex items-center space-x-1', getPrivacyClass()]">
+                    <i :class="['fas', getPrivacyIcon()]"></i>
+                    <span>{{ localItem.privacy }}</span>
+                  </span>
+                </div>
+                
+                <!-- Condition Badge -->
+                <div class="absolute top-4 right-4">
+                  <select v-model="localItem.condition" 
+                          :class="['px-2 py-1 text-xs rounded-full border-2 border-cream font-mechanical font-bold', 
+                            localItem.condition === 'Excellent' ? 'bg-royal text-cream' : 
+                            localItem.condition === 'Good' ? 'bg-midnight text-cream' : 
+                            'bg-abyss text-cream']">
+                    <option value="Excellent">Excellent</option>
+                    <option value="Good">Good</option>
+                    <option value="Fair">Fair</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div v-else class="aspect-square bg-royal bg-opacity-20 flex items-center justify-center">
+                <div class="text-center">
+                  <i class="fas fa-camera-retro text-royal text-3xl mb-2"></i>
+                  <p class="text-sm text-abyss">Add an image of your contraption</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Right side - Form -->
+            <div class="p-6 sm:w-1/2 overflow-y-auto max-h-[calc(100vh-200px)]">
+              <h2 class="text-2xl font-ornate text-royal mb-4">
+                {{ isEditMode ? 'Modify Contraption' : 'Register New Contraption' }}
+              </h2>
+              
+              <form @submit.prevent="saveItem">
+                <!-- Contraption Name -->
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-abyss mb-1" for="item-name">Contraption Title</label>
+                  <input 
+                    id="item-name"
+                    v-model="localItem.name" 
+                    type="text" 
+                    placeholder="What marvel are you sharing?" 
+                    class="w-full px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300"
+                    required
+                  >
+                </div>
+                
+                <!-- Description -->
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-abyss mb-1" for="item-description">Technical Description</label>
+                  <textarea 
+                    id="item-description"
+                    v-model="localItem.description" 
+                    placeholder="Detail its functions and capabilities..." 
+                    class="w-full px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300"
+                    rows="4"
+                    required
+                  ></textarea>
+                </div>
+                
+                <!-- Mobile-only Condition/Privacy Controls -->
+                <div class="sm:hidden mb-4 grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-abyss mb-1">Condition</label>
+                    <select 
+                      v-model="localItem.condition" 
+                      class="w-full px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300"
+                    >
+                      <option value="Excellent">Pristine</option>
+                      <option value="Good">Functioning</option>
+                      <option value="Fair">Requires Care</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-abyss mb-1">Visibility</label>
+                    <select 
+                      v-model="localItem.privacy" 
+                      class="w-full px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300"
+                    >
+                      <option value="Public">Public</option>
+                      <option value="Friends Only">Friends Only</option>
+                      <option value="Private">Private</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <!-- Buttons -->
+                <div class="mt-6 flex space-x-3 justify-end">
+                  <!-- Delete button only shows in edit mode -->
+                  <button 
+                    v-if="isEditMode"
+                    type="button" 
+                    @click="$emit('delete', localItem)" 
+                    class="px-4 py-2 border-2 border-red-600 text-red-600 rounded-xl hover:bg-red-50 font-mechanical transition-colors duration-200"
+                  >
+                    <i class="fas fa-trash-alt mr-1"></i> Remove
+                  </button>
+                  <button 
+                    type="button" 
+                    @click="cancel" 
+                    class="px-4 py-2 border-2 border-royal text-royal rounded-xl hover:bg-royal hover:bg-opacity-10 font-mechanical transition-colors duration-200"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit" 
+                    class="px-4 py-2 bg-royal text-cream rounded-xl border-2 border-royal font-mechanical shadow-steampunk transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0"
+                  >
+                    {{ isEditMode ? 'Update Contraption' : 'Register Contraption' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          
+          <!-- Image uploader section at bottom when no image exists -->
+          <div v-if="!localItem.image" class="p-4 border-t border-royal border-opacity-30 bg-royal bg-opacity-5">
+            <div class="border-2 border-dashed border-royal rounded-xl p-6 text-center hover:bg-royal hover:bg-opacity-5 transition-colors duration-200 cursor-pointer">
+              <i class="fas fa-camera-retro text-royal text-3xl mb-2"></i>
+              <p class="text-sm text-abyss">Tap to capture an image or select from your archives</p>
+              <input type="file" class="hidden" accept="image/*">
+            </div>
+          </div>
+          
+          <!-- Borrowing status section when applicable -->
+          <div v-if="isEditMode && localItem.borrower" class="p-4 border-t border-royal border-opacity-30 bg-royal bg-opacity-5">
+            <h3 class="text-lg font-ornate text-royal mb-2">Current Status</h3>
+            <div class="flex items-center p-3 bg-cream rounded-lg border border-royal">
+              <i class="fas fa-user-clock text-royal text-xl mr-3"></i>
+              <div>
+                <p class="font-mechanical text-abyss">Currently operated by <span class="font-bold">{{ localItem.borrower }}</span></p>
+                <p class="text-sm text-abyss opacity-70">Return expected [date placeholder]</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+};
+
 // Detailed tool modal component
 const toolDetailModal = {
   props: {
@@ -175,53 +392,88 @@ const myToolCard = {
       required: true
     }
   },
+  methods: {
+    handleEditClick(e) {
+      e.stopPropagation();
+      this.$emit('edit', this.item);
+    },
+    handlePrivacyClick(e) {
+      e.stopPropagation();
+      this.$emit('toggle-privacy', this.item);
+    },
+    handleDeleteClick(e) {
+      e.stopPropagation();
+      this.$emit('delete', this.item);
+    },
+    getPrivacyClass() {
+      if (this.item.privacy === 'Public') return 'bg-royal text-cream';
+      if (this.item.privacy === 'Friends Only') return 'bg-midnight text-cream';
+      return 'bg-abyss text-cream';
+    },
+    getPrivacyIcon() {
+      if (this.item.privacy === 'Public') return 'fa-eye';
+      if (this.item.privacy === 'Friends Only') return 'fa-user-friends';
+      return 'fa-eye-slash';
+    }
+  },
   template: `
-    <div class="overflow-hidden shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group">
-      <div class="md:flex">
-        <div class="md:flex-shrink-0 relative">
-          <img class="h-48 w-full object-cover md:w-48 rounded-tl-lg md:rounded-bl-lg md:rounded-tr-none rounded-tr-lg" 
-               :src="item.image" 
-               :alt="item.name">
-          <span :class="['absolute top-2 right-2 px-2 py-1 text-xs rounded-full border border-cream font-mechanical', 
-            item.privacy === 'Public' ? 'bg-royal text-cream' : 
-            item.privacy === 'Friends Only' ? 'bg-midnight text-cream' : 
+    <div @click="$emit('edit', item)" 
+         class="relative group overflow-hidden rounded-xl border-3 border-royal shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+      <!-- Main image takes center stage -->
+      <div class="aspect-square overflow-hidden relative">
+        <img :src="item.image" 
+             :alt="item.name" 
+             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+        
+        <!-- Privacy Badge -->
+        <div class="absolute top-3 left-3">
+          <button @click="handlePrivacyClick" 
+                  :class="['px-2 py-1 text-xs rounded-full border-2 border-cream font-mechanical font-bold flex items-center space-x-1', getPrivacyClass()]">
+            <i :class="['fas', getPrivacyIcon()]"></i>
+            <span class="ml-1">{{ item.privacy }}</span>
+          </button>
+        </div>
+        
+        <!-- Condition Badge -->
+        <div class="absolute top-3 right-3">
+          <span :class="['px-2 py-1 text-xs rounded-full border-2 border-cream font-mechanical font-bold', 
+            item.condition === 'Excellent' ? 'bg-royal text-cream' : 
+            item.condition === 'Good' ? 'bg-midnight text-cream' : 
             'bg-abyss text-cream']">
-            {{ item.privacy }}
+            {{ item.condition }}
           </span>
         </div>
-        <div class="p-4 flex-1">
-          <div class="flex justify-between items-start">
-            <div>
-              <h3 class="text-xl font-ornate text-royal tracking-wide">{{ item.name }}</h3>
-              <p v-if="item.borrower" class="text-sm font-mechanical text-red-600 mt-1 flex items-center">
-                <i class="fas fa-user-clock mr-1"></i> Currently operated by {{ item.borrower }}
-              </p>
-              <p v-else class="text-sm font-mechanical text-green-600 mt-1 flex items-center">
-                <i class="fas fa-check-circle mr-1"></i> Available for community use
-              </p>
-            </div>
-          </div>
-          
-          <p class="mt-3 text-abyss text-sm leading-relaxed">{{ item.description }}</p>
-          
-          <div class="mt-4 flex justify-between">
-            <button @click="$emit('edit', item)" 
-                    class="text-royal hover:text-midnight font-mechanical transition-colors duration-200 flex items-center bg-royal bg-opacity-0 hover:bg-opacity-10 py-1 px-3 rounded">
-              <i class="fas fa-edit mr-1"></i> Modify
-            </button>
-            <div class="flex space-x-2">
-              <button @click="$emit('toggle-privacy', item)" 
-                      class="text-royal hover:text-midnight transition-colors duration-200 bg-royal bg-opacity-0 hover:bg-opacity-10 py-1 px-2 rounded"
-                      :title="item.privacy === 'Public' ? 'Make private' : item.privacy === 'Friends Only' ? 'Make public' : 'Share with friends'">
-                <i :class="['fas', item.privacy === 'Public' ? 'fa-eye' : item.privacy === 'Friends Only' ? 'fa-user-friends' : 'fa-eye-slash']"></i>
-              </button>
-              <button @click="$emit('delete', item)" 
-                      class="text-red-600 hover:text-red-800 transition-colors duration-200 bg-red-600 bg-opacity-0 hover:bg-opacity-10 py-1 px-2 rounded"
-                      title="Delete item">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </div>
-          </div>
+        
+        <!-- Status Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-t from-abyss to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+          <h3 class="text-xl font-ornate text-cream tracking-wide">{{ item.name }}</h3>
+          <p v-if="item.borrower" class="text-sm font-mechanical text-cream mt-1 flex items-center">
+            <i class="fas fa-user-clock mr-1"></i> Currently operated by {{ item.borrower }}
+          </p>
+          <p v-else class="text-sm font-mechanical text-cream mt-1 flex items-center">
+            <i class="fas fa-check-circle mr-1"></i> Available for community use
+          </p>
+        </div>
+      </div>
+      
+      <!-- Action Bar -->
+      <div class="p-3 bg-cream border-t-2 border-royal border-opacity-30 flex justify-between items-center">
+        <button @click="handleEditClick" 
+                class="text-royal hover:text-midnight font-mechanical transition-colors duration-200 flex items-center">
+          <i class="fas fa-edit mr-1"></i> Modify
+        </button>
+        
+        <div class="flex space-x-4">
+          <button @click="handlePrivacyClick" 
+                  :title="item.privacy === 'Public' ? 'Make private' : item.privacy === 'Friends Only' ? 'Make public' : 'Share with friends'"
+                  class="text-royal hover:text-midnight transition-colors duration-200">
+            <i :class="['fas', getPrivacyIcon()]"></i>
+          </button>
+          <button @click="handleDeleteClick" 
+                  title="Delete item"
+                  class="text-red-600 hover:text-red-800 transition-colors duration-200">
+            <i class="fas fa-trash-alt"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -570,5 +822,6 @@ export {
   addItemModal,
   borrowRequestModal,
   messageDetailModal,
-  toolDetailModal
+  toolDetailModal,
+  unifiedGearModal
 };

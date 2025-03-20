@@ -7,6 +7,7 @@ import {
     borrowRequestModal,
     messageDetailModal,
     toolDetailModal,
+    unifiedGearModal,
 } from './components.js';
 
 // Import data layer from hydrate.js
@@ -36,6 +37,7 @@ createApp({
         'borrow-request-modal': borrowRequestModal,
         'message-detail-modal': messageDetailModal,
         'tool-detail-modal': toolDetailModal,
+        'unified-gear-modal': unifiedGearModal
     },
 
     setup() {
@@ -56,6 +58,10 @@ createApp({
         const loading = ref(false);
         const showToolDetailModal = ref(false);
         const selectedToolDetail = ref(null);
+        const showUnifiedGearModal = ref(false);
+        const unifiedGearItem = ref(null);
+        const isEditMode = ref(false);
+        const showLocationModal = ref(false);
 
 
         // User data
@@ -138,6 +144,118 @@ createApp({
         // ==================
 
         // UI Management
+
+        const openAddGearModal = () => {
+            unifiedGearItem.value = {
+                name: '',
+                description: '',
+                condition: 'Good',
+                privacy: 'Public',
+                image: null
+            };
+            isEditMode.value = false;
+            showUnifiedGearModal.value = true;
+        };
+
+        const openEditGearModal = (item) => {
+            unifiedGearItem.value = { ...item };
+            isEditMode.value = true;
+            showUnifiedGearModal.value = true;
+        };
+
+        const saveGearItem = async (item) => {
+            loading.value = true;
+            try {
+                if (isEditMode.value) {
+                    // Update existing item
+                    await updateItem(item.id, item);
+
+                    // Find and update the item in the appropriate arrays
+                    const myItemIndex = myItems.value.findIndex(i => i.id === item.id);
+                    if (myItemIndex !== -1) {
+                        myItems.value[myItemIndex] = { ...item };
+                    }
+
+                    // If privacy is public, update in available items too
+                    if (item.privacy === 'Public') {
+                        const availableIndex = availableItems.value.findIndex(i => i.id === item.id);
+                        if (availableIndex !== -1) {
+                            availableItems.value[availableIndex] = {
+                                ...item,
+                                distance: 0,
+                                availabilityText: 'Anytime',
+                                ownerName: 'You',
+                                ownerAvatar: 'https://placehold.co/100x100/261FB3/FBE4D6?text=Y',
+                                ownerRating: 5.0
+                            };
+                        } else {
+                            // Add to available items if not already there
+                            availableItems.value.unshift({
+                                ...item,
+                                distance: 0,
+                                availabilityText: 'Anytime',
+                                ownerName: 'You',
+                                ownerAvatar: 'https://placehold.co/100x100/261FB3/FBE4D6?text=Y',
+                                ownerRating: 5.0
+                            });
+                        }
+                    } else {
+                        // Remove from available items if no longer public
+                        availableItems.value = availableItems.value.filter(i => i.id !== item.id);
+                    }
+
+                    displayToast('Contraption successfully updated!');
+                } else {
+                    // Add new item
+                    const result = await addItem(item);
+                    myItems.value.unshift(result);
+
+                    // Add to available items if public
+                    if (item.privacy === 'Public') {
+                        availableItems.value.unshift({
+                            ...result,
+                            distance: 0,
+                            availabilityText: 'Anytime',
+                            ownerName: 'You',
+                            ownerAvatar: 'https://placehold.co/100x100/261FB3/FBE4D6?text=Y',
+                            ownerRating: 5.0
+                        });
+                    }
+
+                    displayToast('Contraption added to your workshop!');
+                }
+
+                showUnifiedGearModal.value = false;
+            } catch (error) {
+                console.error("Error saving item:", error);
+                displayToast("Failed to save contraption. Please try again.");
+            } finally {
+                loading.value = false;
+            }
+        };
+
+        const deleteGearItem = async (item) => {
+            if (confirm(`Are you sure you want to delete "${item.name}"?`)) {
+                loading.value = true;
+                try {
+                    await deleteItem(item.id);
+
+                    // Remove from my items
+                    myItems.value = myItems.value.filter(i => i.id !== item.id);
+
+                    // Remove from available items if it exists there
+                    availableItems.value = availableItems.value.filter(i => i.id !== item.id);
+
+                    showUnifiedGearModal.value = false;
+                    displayToast('Contraption removed from your workshop');
+                } catch (error) {
+                    console.error("Error deleting item:", error);
+                    displayToast("Failed to delete contraption. Please try again.");
+                } finally {
+                    loading.value = false;
+                }
+            }
+        };
 
         const openToolDetailModal = (item) => {
             console.log('MODAL OPEN ATTEMPT!', item);
@@ -506,7 +624,15 @@ createApp({
             showToolDetailModal,
             selectedToolDetail,
             openToolDetailModal,
-            closeToolDetailModal
+            closeToolDetailModal,
+            showUnifiedGearModal,
+            unifiedGearItem,
+            isEditMode,
+            openAddGearModal,
+            openEditGearModal,
+            saveGearItem,
+            deleteGearItem,
+            showLocationModal
         };
     }
 }).mount('#app');

@@ -150,10 +150,10 @@
     <div id="app" v-cloak class="min-h-screen flex flex-col lg:flex-row">
       <!-- Desktop Sidebar (Fixed on large screens) -->
       <aside
-        class="lg:w-72 lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:flex-col p-6 bg-cream bg-opacity-95 border-r border-royal border-opacity-20 z-10"
+        class="lg:w-72 lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:flex-col p-6 bg-cream bg-opacity-95 border-r border-royal border-opacity-20 z-10 hidden lg:block"
       >
         <div
-          class="rounded-2xl bg-gradient-to-br from-royal to-abyss text-cream p-6 mb-4 relative overflow-hidden"
+          class="rounded-2xl bg-gradient-to-br from-royal to-abyss text-cream p-6 mb-4 relative"
         >
           <div
             class="absolute top-0 right-0 w-20 h-20 bg-cog-decoration bg-no-repeat animate-spin-slow"
@@ -234,7 +234,7 @@
 
         <div class="mt-auto">
           <button
-            @click="toggleNewItemModal"
+            @click="openAddGearModal"
             class="w-full py-3 px-4 bg-royal text-cream rounded-xl border-2 border-cream font-mechanical uppercase tracking-wider shadow-steampunk transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0 flex items-center justify-center"
           >
             <i class="fas fa-plus mr-2"></i> Add New Gear
@@ -254,111 +254,8 @@
         </div>
       </aside>
 
-      <!-- Mobile Navigation -->
-      <header
-        class="lg:hidden rounded-2xl bg-gradient-to-br from-royal to-abyss shadow-steampunk mb-4 relative overflow-hidden"
-      >
-        <div
-          class="absolute top-0 right-0 w-10 h-10 bg-cog-decoration bg-no-repeat opacity-60 animate-spin-slow"
-        ></div>
-        <div
-          class="absolute bottom-0 left-0 w-10 h-10 bg-cog-decoration bg-no-repeat opacity-60 animate-spin-reverse"
-        ></div>
-        <div class="px-6 py-6">
-          <div class="flex justify-between items-center">
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-                <span class="text-4xl font-steampunk text-cream"
-                  >Gearshare</span
-                >
-              </div>
-            </div>
-            <div class="flex items-center space-x-4">
-              <button
-                @click="detectLocation"
-                class="text-cream hover:text-white transition duration-300"
-              >
-                <i class="fas fa-location-arrow"></i>
-              </button>
-              <button
-                @click="toggleNewItemModal"
-                class="px-4 py-2 bg-royal text-cream rounded-full border-2 border-cream font-mechanical uppercase tracking-wider text-sm shadow-steampunk transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0 flex items-center"
-              >
-                <i class="fas fa-plus mr-2"></i> Add Gear
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <!-- Main Content - With proper spacing for sidebar -->
-      <main class="flex-1 p-4 lg:p-8 lg:pl-80">
-        <!-- Location Bar (Mobile Only) -->
-        <div
-          class="lg:hidden rounded-xl border-2 border-royal p-4 flex items-center justify-between bg-cream mb-4"
-        >
-          <div class="flex items-center">
-            <i class="fas fa-map-marker-alt text-royal mr-2"></i>
-            <span class="font-mechanical">{{ currentLocation }}</span>
-          </div>
-          <div>
-            <select
-              v-model="searchRadius"
-              class="px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss font-mechanical focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300 appearance-none bg-no-repeat bg-right pr-8"
-              style="
-                background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 20 20\' fill=\'%23261FB3\'%3E%3Cpath fill-rule=\'evenodd\' d=\'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z\' clip-rule=\'evenodd\' /%3E%3C/svg%3E');
-                background-size: 1.5em 1.5em;
-              "
-            >
-              <option value="1">1 km radius</option>
-              <option value="2">2 km radius</option>
-              <option value="5">5 km radius</option>
-              <option value="10">10 km radius</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Tab Navigation (Mobile Only) -->
-        <div
-          class="flex lg:hidden rounded-xl border-2 border-royal overflow-hidden mb-4"
-        >
-          <button
-            @click="activeTab = 'available'"
-            :class="[
-            'flex-1 py-3 px-4 text-center font-medium transition-colors duration-200',
-            activeTab === 'available' ? 'bg-royal text-cream' : 'bg-cream text-royal'
-            ]"
-          >
-            <i class="fas fa-search mr-2"></i> Find Gear
-          </button>
-          <button
-            @click="activeTab = 'myItems'"
-            :class="[
-            'flex-1 py-3 px-4 text-center font-medium transition-colors duration-200',
-            activeTab === 'myItems' ? 'bg-royal text-cream' : 'bg-cream text-royal'
-            ]"
-          >
-            <i class="fas fa-cogs mr-2"></i> My Gear
-          </button>
-          <button
-            @click="activeTab = 'messages'"
-            :class="[
-            'flex-1 py-3 px-4 text-center font-medium transition-colors duration-200',
-            activeTab === 'messages' ? 'bg-royal text-cream' : 'bg-cream text-royal'
-            ]"
-          >
-            <i class="fas fa-envelope mr-2"></i>
-            <span class="relative">
-              Messages
-              <span
-                v-if="unreadMessages > 0"
-                class="absolute -top-2 -right-6 px-2 py-0 text-xs bg-royal text-cream rounded-full"
-                >{{ unreadMessages }}</span
-              >
-            </span>
-          </button>
-        </div>
-
+      <main class="flex-1 p-4 lg:p-8 lg:pl-80 pb-20 lg:pb-8">
         <!-- Tab Content Area -->
         <div class="mx-auto max-w-6xl">
           <!-- Search Bar (only in Find Gear tab) -->
@@ -381,7 +278,9 @@
           <!-- Tab Content -->
           <!-- Available Tools Tab -->
           <div v-if="activeTab === 'available'">
-            <h2 class="font-ornate text-2xl text-royal mb-4 lg:hidden">
+            <h2
+              class="font-ornate text-2xl font-bold text-royal mb-4 lg:hidden"
+            >
               Available Contraptions
             </h2>
 
@@ -418,8 +317,11 @@
           </div>
 
           <!-- My Gear Tab -->
+          <!-- My Gear Tab -->
           <div v-else-if="activeTab === 'myItems'">
-            <h2 class="font-ornate text-2xl text-royal mb-4 lg:hidden">
+            <h2
+              class="font-ornate text-2xl text-royal font-bold mb-4 lg:hidden"
+            >
               My Workshop
             </h2>
 
@@ -432,22 +334,25 @@
                 Your workshop appears to be empty, inventor!
               </p>
               <button
-                @click="toggleNewItemModal"
+                @click="openAddGearModal"
                 class="px-6 py-3 bg-royal text-cream rounded-full border-2 border-cream font-mechanical uppercase tracking-wider shadow-steampunk transition-all duration-300 hover:bg-midnight hover:-translate-y-1 active:translate-y-0"
               >
                 Register Your First Contraption
               </button>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Update this grid to match the Find Gear grid -->
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            >
               <my-tool-card
                 v-for="item in myItems"
                 :key="item.id"
                 :item="item"
-                @edit="editItem"
+                @edit="openEditGearModal"
                 @toggle-privacy="toggleItemPrivacy"
                 @delete="confirmDeleteItem"
-                class="rounded-xl border-3 border-royal relative overflow-hidden bg-cream before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-royal before:to-abyss"
+                class="relative overflow-hidden bg-cream"
               ></my-tool-card>
             </div>
           </div>
@@ -481,9 +386,70 @@
             </div>
           </div>
         </div>
+        <div
+          class="fixed bottom-0 left-0 right-0 lg:hidden bg-royal text-cream z-40 shadow-lg border-t-2 border-cream"
+        >
+          <div class="flex justify-around items-center p-3">
+            <button
+              @click="activeTab = 'available'"
+              class="flex flex-col items-center justify-center py-1 px-3 rounded-lg"
+              :class="activeTab === 'available' ? 'bg-midnight' : ''"
+            >
+              <i class="fas fa-search text-lg"></i>
+            </button>
+
+            <button
+              @click="activeTab = 'myItems'"
+              class="flex flex-col items-center justify-center py-1 px-3 rounded-lg"
+              :class="activeTab === 'myItems' ? 'bg-midnight' : ''"
+            >
+              <i class="fas fa-cogs text-lg"></i>
+            </button>
+
+            <button
+              @click="openAddGearModal"
+              class="flex flex-col items-center justify-center py-1 px-3 -mt-5 bg-midnight rounded-full border-2 border-cream shadow-lg h-14 w-14"
+            >
+              <i class="fas fa-plus text-lg"></i>
+            </button>
+
+            <button
+              @click="activeTab = 'messages'"
+              class="flex flex-col items-center justify-center py-1 px-3 rounded-lg relative"
+              :class="activeTab === 'messages' ? 'bg-midnight' : ''"
+            >
+              <i class="fas fa-envelope text-lg"></i>
+              <span
+                v-if="unreadMessages > 0"
+                class="absolute -top-1 right-1 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center"
+              >
+                {{ unreadMessages }}
+              </span>
+            </button>
+
+            <button
+              @click="showLocationModal = true"
+              class="flex flex-col items-center justify-center py-1 px-3 rounded-lg"
+              :class="showLocationModal ? 'bg-midnight' : ''"
+            >
+              <i class="fas fa-map-marker-alt text-lg"></i>
+            </button>
+          </div>
+        </div>
       </main>
 
       <!-- Modals -->
+      <unified-gear-modal
+        v-if="showUnifiedGearModal"
+        :item="unifiedGearItem"
+        :is-edit-mode="isEditMode"
+        :show="showUnifiedGearModal"
+        @close="showUnifiedGearModal = false"
+        @save="saveGearItem"
+        @delete="deleteGearItem"
+        class="modal-enter"
+      ></unified-gear-modal>
+
       <tool-detail-modal
         v-if="showToolDetailModal"
         :item="selectedToolDetail"
@@ -525,10 +491,14 @@
       <!-- Toast Notification -->
       <div
         v-if="showToast"
-        class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center bg-royal text-cream rounded-xl px-6 py-3 border-2 border-cream shadow-steampunk toast-enter"
+        class="fixed bottom-24 lg:bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center bg-royal text-cream rounded-xl px-6 py-3 border-2 border-cream shadow-steampunk toast-enter max-w-md w-5/6 lg:w-auto"
       >
-        <i class="fas fa-cog fa-spin mr-2"></i>
-        <span>{{ toastMessage }}</span>
+        <div class="flex items-center">
+          <div class="animate-spin-slow text-lg mr-3">⚙️</div>
+          <div>
+            <p class="font-mechanical">{{ toastMessage }}</p>
+          </div>
+        </div>
       </div>
 
       <!-- Keyboard Shortcuts (hidden) -->
@@ -546,6 +516,82 @@
         <button id="shortcut-messages" @click="activeTab = 'messages'">
           Messages
         </button>
+      </div>
+      <div v-if="showLocationModal" class="fixed inset-0 z-50 lg:hidden">
+        <div
+          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        >
+          <!-- Background overlay -->
+          <div
+            class="fixed inset-0 bg-abyss bg-opacity-75 transition-opacity"
+            aria-hidden="true"
+            @click="showLocationModal = false"
+          ></div>
+
+          <!-- Location Panel -->
+          <div
+            class="inline-block align-bottom bg-cream rounded-t-2xl w-full overflow-hidden shadow-xl transform transition-all"
+          >
+            <div
+              class="bg-royal text-cream py-3 px-4 flex justify-between items-center"
+            >
+              <h3 class="text-lg font-ornate">Your Location</h3>
+              <button @click="showLocationModal = false" class="text-cream">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+
+            <div class="p-6">
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-abyss mb-2"
+                  >Current Location</label
+                >
+                <div class="flex items-center">
+                  <div class="flex-1">
+                    <div
+                      class="px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss font-mechanical"
+                    >
+                      {{ currentLocation }}
+                    </div>
+                  </div>
+                  <button
+                    @click="detectLocation"
+                    class="ml-2 text-royal hover:text-midnight transition duration-300 p-2 bg-cream border border-royal rounded-full"
+                  >
+                    <i class="fas fa-location-arrow"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="mb-6">
+                <label class="block text-sm font-medium text-abyss mb-2"
+                  >Search Radius</label
+                >
+                <select
+                  v-model="searchRadius"
+                  class="w-full px-3 py-2 bg-cream border-2 border-royal rounded-xl text-abyss font-mechanical focus:outline-none focus:ring-2 focus:ring-royal focus:border-transparent transition-all duration-300 appearance-none bg-no-repeat bg-right pr-8"
+                  style="
+                    background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 20 20\' fill=\'%23261FB3\'%3E%3Cpath fill-rule=\'evenodd\' d=\'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z\' clip-rule=\'evenodd\' /%3E%3C/svg%3E');
+                    background-size: 1.5em 1.5em;
+                  "
+                >
+                  <option value="1">1 km radius</option>
+                  <option value="2">2 km radius</option>
+                  <option value="5">5 km radius</option>
+                  <option value="10">10 km radius</option>
+                  <option value="20">20 km radius</option>
+                </select>
+              </div>
+
+              <button
+                @click="showLocationModal = false"
+                class="w-full py-3 px-4 bg-royal text-cream rounded-xl border-2 border-royal font-mechanical shadow-steampunk transition-all duration-300"
+              >
+                Apply Settings
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
