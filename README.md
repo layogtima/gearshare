@@ -6,11 +6,6 @@ A hyperlocal tool-sharing platform that fosters community hacking and helps you 
 
 https://github.com/user-attachments/assets/91607271-7102-44e4-91ba-012e3709cd4d
 
-
-Uploading Screen Recording 2025-03-21 at 2.56.47 AM.mp4…
-
-
-
 ## Core Philosophy
 
 GearShare exists to:
